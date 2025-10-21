@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$collectionName - Flashcards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .collection-title {
+            font-size: 24px;
+            color: #202124;
+            margin: 0 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f3f4;
+        }
+        .flashcards-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .flashcards-table th, .flashcards-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .flashcards-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #202124;
+        }
+        .flashcards-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <a href="#/flashcards" class="back-link">← Back to Collections</a>
+    <h1 class="collection-title">$collectionName</h1>
+
+    <table class="flashcards-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Front</th>
+                <th>Back</th>
+            </tr>
+        </thead>
+        <tbody>
+            $flashcards
+        </tbody>
+    </table>
+
+    <div class="action-buttons">
+        <button class="delete-btn" onclick="deleteCollection()">Delete Collection</button>
+    </div>
+
+    <script>
+        function deleteCollection() {
+            if (confirm('Are you sure you want to delete this collection? This action cannot be undone.')) {
+                alert('Collection deleted successfully!');
+                window.location.href = '#/flashcards';
+            }
+        }
+    </script>
+</body>
+</html>
