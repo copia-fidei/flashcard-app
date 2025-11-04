@@ -19,7 +19,7 @@ import java.util.Optional;
 import static java.lang.System.lineSeparator;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-@Path("/flashcards/{collection}")
+@Path("{collection}")
 public class Flashcards_Collection {
 
 	private Collections collections = new Collections(
