@@ -29,4 +29,9 @@ public class Collection {
 	public List<Flashcard> Flashcards() {
 		return flashcards;
 	}
+
+	@Override
+	public String toString() {
+		return EncodedName();
+	}
 }
