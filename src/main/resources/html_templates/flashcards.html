@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flashcards</title>
     <style>
+        input[type="file"] { display: none; }
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
@@ -42,9 +43,33 @@
         .button:hover {
             background-color: #FFD54F;
         }
+        .button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
         .button-container {
             margin: 30px 0 20px 0;
             width: 100%;
+        }
+        #fileInput {
+            display: none;
+        }
+        #statusMessage {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            display: none;
+        }
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
         }
     </style>
 </head>
@@ -57,15 +82,58 @@
         <ul>$collections</ul>
     </div>
 
-    <div class="button-container">
-        <button class="button" type="button" onclick="openImportDialog()">Import</button>
-    </div>
+    <form class="button-container" method="post" enctype="multipart/form-data">
+        <label for="file-upload" class="button">
+            Import Collection
+        </label>
+        <input id="file-upload" name="file" type="file" onchange="this.form.submit()"/>
+<!--        <input type="file" name="file" size="45" />-->
+<!--        <input type="submit" value="Upload It" />-->
+    </form>
+<!--    <div class="button-container">-->
+<!--        <input type="file" id="fileInput" accept=".csv,text/csv">-->
+<!--        <button class="button" type="button" onclick="document.getElementById('fileInput').click()">Import Collection</button>-->
+<!--    </div>-->
+    <div id="statusMessage"></div>
 </div>
 
 <script>
-    function openImportDialog() {
-        alert('Opening import dialog...');
-        window.location.href = '#/flashcards/upload-success';
+    const fileInput = document.getElementById('fileInput');
+    const statusMessage = document.getElementById('statusMessage');
+
+    fileInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        showStatus('Uploading...', '');
+
+        fetch(window.location.pathname, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Upload failed');
+            }
+            return response.text();
+        })
+        .then(message => {
+            showStatus(message, 'success');
+            setTimeout(() => window.location.reload(), 1000);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showStatus('Error: ' + error.message, 'error');
+        });
+    });
+
+    function showStatus(message, type) {
+        statusMessage.textContent = message;
+        statusMessage.className = type;
+        statusMessage.style.display = 'block';
     }
 </script>
 </body>

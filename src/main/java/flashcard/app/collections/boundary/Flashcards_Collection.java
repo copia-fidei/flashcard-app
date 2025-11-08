@@ -2,13 +2,11 @@ package flashcard.app.collections.boundary;
 
 import flashcard.app.StackTrace;
 import flashcard.app.collections.entity.*;
-import flashcard.app.flashcards.servlet.HelloWorldServlet;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.InputStream;
 import java.net.URLDecoder;
-import java.util.List;
 import java.util.Optional;
 
 import static java.lang.System.lineSeparator;
@@ -17,7 +15,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Path("{collection}")
 public class Flashcards_Collection {
 
-	private final Collections collections = new PersistedMockCollections();
+	private final Collections collections = new MockCollections();
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)

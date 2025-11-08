@@ -3,9 +3,9 @@ package flashcard.app.collections.entity;
 import java.util.List;
 import java.util.Optional;
 
-public class PersistedMockCollections implements Collections {
+public class MockCollections implements Collections {
 
-    private static final Collections mock = new CollectionsImp(
+    private static final Collections mockCollections = new CollectionsImp(
 			new Collection("English vocabulary", List.of(
 					new Flashcard("cat", "кот"),
 					new Flashcard("dog", "собака")
@@ -28,16 +28,21 @@ public class PersistedMockCollections implements Collections {
 
 	@Override
     public List<Collection> List() {
-        return mock.List();
+        return mockCollections.List();
     }
 
     @Override
     public Optional<Collection> getCollection(String pathParam) {
-        return mock.getCollection(pathParam);
+        return mockCollections.getCollection(pathParam);
     }
 
     @Override
     public boolean removeCollection(String pathParam) {
-        return mock.removeCollection(pathParam);
+        return mockCollections.removeCollection(pathParam);
     }
+
+	@Override
+	public void addCollection(final Collection collection) {
+		mockCollections.addCollection(collection);
+	}
 }

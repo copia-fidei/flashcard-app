@@ -28,4 +28,9 @@ public class CollectionsImp implements Collections {
 		final String decoded = URLDecoder.decode(pathParam, StandardCharsets.UTF_8);
 		return list.removeIf(collection -> collection.Name().equals(decoded));
 	}
+
+	@Override
+	public void addCollection(final Collection collection) {
+		list.add(collection);
+	}
 }

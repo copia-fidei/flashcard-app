@@ -9,4 +9,6 @@ public interface Collections {
     Optional<Collection> getCollection(String pathParam);
 
     boolean removeCollection(String encodedName);
+
+	void addCollection(Collection collection);
 }
