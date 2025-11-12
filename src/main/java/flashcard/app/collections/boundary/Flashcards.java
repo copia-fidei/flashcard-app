@@ -2,6 +2,8 @@ package flashcard.app.collections.boundary;
 
 import flashcard.app.Css;
 import flashcard.app.StackTrace;
+import flashcard.app.collection.entity.Collection;
+import flashcard.app.collection.entity.Flashcard;
 import flashcard.app.collections.entity.*;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;

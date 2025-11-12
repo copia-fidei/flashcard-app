@@ -1,7 +1,8 @@
-package flashcard.app.collections.boundary;
+package flashcard.app.collection.boundary;
 
 import flashcard.app.Css;
 import flashcard.app.StackTrace;
+import flashcard.app.collection.entity.Collection;
 import flashcard.app.collections.entity.*;
 
 import javax.ws.rs.*;

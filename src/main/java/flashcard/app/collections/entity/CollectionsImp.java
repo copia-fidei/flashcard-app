@@ -1,5 +1,7 @@
 package flashcard.app.collections.entity;
 
+import flashcard.app.collection.entity.Collection;
+
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;

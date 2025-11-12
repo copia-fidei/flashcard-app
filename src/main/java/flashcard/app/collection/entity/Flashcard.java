@@ -1,4 +1,4 @@
-package flashcard.app.collections.entity;
+package flashcard.app.collection.entity;
 
 public class Flashcard {
 
@@ -9,7 +9,6 @@ public class Flashcard {
 		this.front = front;
 		this.back = back;
 	}
-
 
 	public String Back() {
 		return back;

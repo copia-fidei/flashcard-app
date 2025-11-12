@@ -1,4 +1,4 @@
-package flashcard.app.collections.entity;
+package flashcard.app.collection.entity;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

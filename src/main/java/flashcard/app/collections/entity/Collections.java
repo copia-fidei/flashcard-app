@@ -1,5 +1,7 @@
 package flashcard.app.collections.entity;
 
+import flashcard.app.collection.entity.Collection;
+
 import java.util.List;
 import java.util.Optional;
 
