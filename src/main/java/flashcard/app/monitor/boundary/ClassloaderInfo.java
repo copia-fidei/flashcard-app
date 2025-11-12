@@ -1,10 +1,14 @@
 package flashcard.app.monitor.boundary;
 
+import flashcard.app.StackTrace;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.net.URISyntaxException;
 import java.net.URLClassLoader;
+import java.nio.file.FileSystems;
 import java.text.MessageFormat;
 import java.util.Arrays;
 
@@ -18,6 +22,16 @@ public class ClassloaderInfo {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String resourceLocation() {
 		return getClass().getClassLoader().getResource("") + lineSeparator();
+	}
+
+	@Path("fs")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String fileSystem() {
+		try {
+			return FileSystems.getFileSystem(getClass().getClassLoader().getResource("").toURI()).toString();
+		} catch (URISyntaxException e) {
+			return new StackTrace(e).toString();
+		}
 	}
 
 	MessageFormat format = new MessageFormat(
@@ -35,7 +49,7 @@ public class ClassloaderInfo {
 		final var pClassloader  = classLoader.getParent();
 		final var ppClassloader = pClassloader.getParent();
 		final var sb = new StringBuilder();
-		sb.append("Class loader hierarchy, from this classloader to parent (top to bottom):");
+		sb.append("Class loader hierarchy, from this classloader to its parent (top to bottom):");
 		sb.append(clInfo(classLoader));
 		sb.append("-".repeat(100));
 		sb.append(clInfo(pClassloader));

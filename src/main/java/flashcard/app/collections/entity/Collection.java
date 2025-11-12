@@ -18,14 +18,28 @@ public class Collection {
 		this.flashcards.addAll(flashcards);
 	}
 
+	/**
+	 * Removes the ending if it is a file name.
+	 *
+	 * @return
+	 */
 	public String Name() {
+//		// TODO, remove this distinction, just use file name
+//		final int endIndex = name.lastIndexOf('.');
+//		if (endIndex != -1)
+//				return name.substring(0, endIndex);
 		return name;
 	}
 
 	public String EncodedName() {
-		return URLEncoder.encode(name, StandardCharsets.UTF_8);
+		return URLEncoder.encode(Name(), StandardCharsets.UTF_8);
 	}
 
+	/**
+	 * Removes the ending if it is a file name.
+	 *
+	 * @return
+	 */
 	public List<Flashcard> Flashcards() {
 		return flashcards;
 	}

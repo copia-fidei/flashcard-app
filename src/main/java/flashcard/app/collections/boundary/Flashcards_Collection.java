@@ -1,11 +1,14 @@
 package flashcard.app.collections.boundary;
 
+import flashcard.app.Css;
 import flashcard.app.StackTrace;
 import flashcard.app.collections.entity.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Optional;
 
@@ -18,11 +21,24 @@ public class Flashcards_Collection {
 	private final Collections collections = new MockCollections();
 
 	@GET
+	@Path("css")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getCss() {
+		final URL resourceAsStream = getClass()
+				.getClassLoader()
+				.getResource("/html_templates/styles.css");
+
+		return resourceAsStream.toString();
+	}
+
+	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String collection(@PathParam("collection") String name) {
-		final ClassLoader classLoader = getClass().getClassLoader();
-		try (InputStream res = classLoader.getResourceAsStream("/html_templates/flashcards_collection.html")) {
-			final String htmlTemplate = new String(res.readAllBytes(), UTF_8);
+		try (InputStream res = getClass().getClassLoader().getResourceAsStream("/html_templates/flashcards_collection.html")) {
+			if (res == null) {
+				throw new IOException("Template not found");
+			}
+			String htmlTemplate = new String(res.readAllBytes(), UTF_8);
 
 			final Optional<Collection> optCollection = collections.getCollection(name);
 			if (optCollection.isPresent()) {
@@ -45,11 +61,10 @@ public class Flashcards_Collection {
 							.append(lineSeparator());
 				}
 
-
-				// Replace the placeholder with the generated table rows
 				return htmlTemplate
 						.replace("$collectionName", collection.Name())
-						.replace("$flashcards", tableRows);
+						.replace("$flashcards", tableRows)
+						.replace("$stylesheet", Css.get());
 			}
 			else {
 				return name + System.lineSeparator().repeat(2) + URLDecoder.decode(name) + lineSeparator().repeat(2) + collections.List().get(1);
