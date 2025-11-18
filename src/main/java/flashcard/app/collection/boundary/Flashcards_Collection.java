@@ -5,6 +5,7 @@ import flashcard.app.StackTrace;
 import flashcard.app.collection.entity.Collection;
 import flashcard.app.collections.entity.*;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
@@ -16,17 +17,19 @@ import java.util.Optional;
 import static java.lang.System.lineSeparator;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+
 @Path("{collection}")
 public class Flashcards_Collection {
 
-	private final Collections collections = new MockCollections();
+	@Inject
+	private Collections collections;
 
 	@GET
 	@Path("css")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getCss() {
 		final URL resourceAsStream = getClass()
-				.getClassLoader()
+ 				.getClassLoader()
 				.getResource("/html_templates/styles.css");
 
 		return resourceAsStream.toString();
@@ -79,9 +82,9 @@ public class Flashcards_Collection {
 
 	@DELETE
 	@Produces(MediaType.TEXT_PLAIN)
-	public String deleteCollection(@PathParam("collection") String encodedName) {
+	public String deleteCollection(@PathParam("collection") String name) {
 		try {
-			if (collections.removeCollection(encodedName)) {
+			if (collections.removeCollection(name)) {
 				return "Collection deleted successfully";
 			} else {
 				return "Collection not found";

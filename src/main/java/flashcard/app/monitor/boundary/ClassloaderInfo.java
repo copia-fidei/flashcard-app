@@ -48,14 +48,12 @@ public class ClassloaderInfo {
 		final var classLoader   = getClass().getClassLoader();
 		final var pClassloader  = classLoader.getParent();
 		final var ppClassloader = pClassloader.getParent();
-		final var sb = new StringBuilder();
-		sb.append("Class loader hierarchy, from this classloader to its parent (top to bottom):");
-		sb.append(clInfo(classLoader));
-		sb.append("-".repeat(100));
-		sb.append(clInfo(pClassloader));
-		sb.append("-".repeat(100));
-		sb.append(clInfo(ppClassloader));
-		return sb.toString();
+		return "Class loader hierarchy, from this classloader to its parent (top to bottom):"
+				+ clInfo(classLoader)
+				+ "-".repeat(100)
+				+ clInfo(pClassloader)
+				+ "-".repeat(100)
+				+ clInfo(ppClassloader);
 	}
 
 	private String clInfo(ClassLoader cl) {

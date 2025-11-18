@@ -1,21 +1,27 @@
 package flashcard.app.collections.boundary;
 
+import flashcard.app.Configuration;
 import flashcard.app.Css;
 import flashcard.app.StackTrace;
-import flashcard.app.collection.entity.Collection;
+import flashcard.app.collection.entity.CollectionImp;
 import flashcard.app.collection.entity.Flashcard;
 import flashcard.app.collections.entity.*;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 import static java.lang.System.lineSeparator;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.StandardOpenOption.CREATE;
 import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
@@ -23,8 +29,8 @@ import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 @Path("/")
 public class Flashcards {
 
-    private final Collections collections = new MockCollections();
-
+	@Inject
+    private Collections collections;
 
 
     @POST
@@ -35,15 +41,20 @@ public class Flashcards {
 
 		try (uploadedFile) {
 			try {
-				var newCollection = new Collection(fileInfo.getFileName(), parseCSV(uploadedFile));
+				final byte[] fileContent = uploadedFile.readAllBytes();
+				var newCollection = new CollectionImp(fileInfo.getFileName(), parseCSV(fileContent));
 
-				collections.addCollection(newCollection);
+				Files.write(Configuration.COLLECTIONS_DIR.resolve(fileInfo.getFileName()), fileContent, CREATE);
 
-				return Response
-						.status(CREATED)
-						.entity("Collection '" + newCollection.Name() + "' created successfully with " +
-								newCollection.Flashcards().size() + " cards.")
-						.build();
+				collections.List().add(newCollection);
+
+				// Redirect to the success page with parameters
+				return Response.seeOther(
+						java.net.URI.create(String.format(
+								"/flashcards/upload-success?collection=%s",
+								newCollection.EncodedName()
+						))
+				).build();
 
 			} catch (IOException e) {
 				return Response
@@ -59,8 +70,8 @@ public class Flashcards {
 		}
 	}
 
-    private List<Flashcard> parseCSV(InputStream csvFile) throws IOException {
-		return new String(csvFile.readAllBytes(), UTF_8)
+    private List<Flashcard> parseCSV(byte[] content) throws IOException {
+		return new String(content, UTF_8)
 				.lines()
 				.map(line -> {
 					final String[] split = line.split(",");

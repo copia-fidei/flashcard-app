@@ -38,7 +38,7 @@
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>
-                flashcard.app.flashcards.rest,
+                flashcard.app.collection.boundary,
                 flashcard.app.collections.boundary,
                 flashcard.app.monitor.boundary
             </param-value>

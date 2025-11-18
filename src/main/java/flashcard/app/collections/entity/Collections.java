@@ -8,9 +8,11 @@ import java.util.Optional;
 public interface Collections {
     List<Collection> List();
 
-    Optional<Collection> getCollection(String pathParam);
+	default Optional<Collection> getCollection(String pathParam) {
+		return List().stream().filter(collection -> collection.isReferredBy(pathParam)).findFirst();
+	}
 
-    boolean removeCollection(String encodedName);
-
-	void addCollection(Collection collection);
+	default boolean removeCollection(String pathParam) {
+		return List().removeIf(collection -> collection.isReferredBy(pathParam));
+	}
 }

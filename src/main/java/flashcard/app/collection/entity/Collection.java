@@ -1,51 +1,24 @@
 package flashcard.app.collection.entity;
 
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
-public class Collection {
+import static java.net.URLDecoder.decode;
+import static java.net.URLEncoder.encode;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
-	private String name;
+public interface Collection {
 
-	private List<Flashcard> flashcards = new ArrayList<>();
 
-	public Collection(final String name) { this.name = name; }
+	String Name();
 
-	public Collection(final String name, final List<Flashcard> flashcards) {
-		this.name = name;
-		this.flashcards.addAll(flashcards);
+	default String EncodedName() {
+		return encode(Name(), UTF_8);
 	}
 
-	/**
-	 * Removes the ending if it is a file name.
-	 *
-	 * @return
-	 */
-	public String Name() {
-//		// TODO, remove this distinction, just use file name
-//		final int endIndex = name.lastIndexOf('.');
-//		if (endIndex != -1)
-//				return name.substring(0, endIndex);
-		return name;
-	}
+	List<Flashcard> Flashcards();
 
-	public String EncodedName() {
-		return URLEncoder.encode(Name(), StandardCharsets.UTF_8);
-	}
-
-	/**
-	 * Removes the ending if it is a file name.
-	 *
-	 * @return
-	 */
-	public List<Flashcard> Flashcards() {
-		return flashcards;
-	}
-
-	@Override
-	public String toString() {
-		return EncodedName();
+	default boolean isReferredBy(String pathParam) {
+		return Name().equals(decode(pathParam, UTF_8));
 	}
 }
