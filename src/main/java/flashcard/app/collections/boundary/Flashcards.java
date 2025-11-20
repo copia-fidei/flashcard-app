@@ -1,7 +1,7 @@
 package flashcard.app.collections.boundary;
 
 import flashcard.app.Configuration;
-import flashcard.app.Css;
+import flashcard.app.SharedCss;
 import flashcard.app.StackTrace;
 import flashcard.app.collection.entity.CollectionImp;
 import flashcard.app.collection.entity.Flashcard;
@@ -15,22 +15,24 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 import static java.lang.System.lineSeparator;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.util.stream.Collectors.toList;
-import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 
-@Path("/")
+@Path("collections")
 public class Flashcards {
 
 	@Inject
     private Collections collections;
+
+//	@Path("{collection}")
+//	public Flashcards_Collection Collection() {
+//		return new Flashcards_Collection();
+//	}
 
 
     @POST
@@ -92,6 +94,7 @@ public class Flashcards {
             for (final var collection : collections.List()) {
                 liElements.append(lineSeparator());
                 liElements.append("<li><a href=\"")
+						  .append("collections/")
                           .append(collection.EncodedName()).append("\">").append(collection.Name())
                           .append("</a></li>");
             }
@@ -99,7 +102,7 @@ public class Flashcards {
 
             return new String(resource.readAllBytes(), UTF_8)
 					.replace("$collections", liElements.toString())
-					.replace("$stylesheet", Css.get());
+					.replace("$stylesheet", SharedCss.get());
         } catch (Exception e) {
             return new StackTrace(e).toString();
         }

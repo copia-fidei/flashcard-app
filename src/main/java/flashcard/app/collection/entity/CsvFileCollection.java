@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.Files.readString;
 import static java.util.stream.Collectors.toList;
 
 public class CsvFileCollection implements Collection {
@@ -31,7 +32,8 @@ public class CsvFileCollection implements Collection {
 	public List<Flashcard> Flashcards() {
 		if (flashcards.isEmpty()) {
 			try {
-				flashcards.addAll(Files.readString(filePath)
+				flashcards.addAll(
+						readString(filePath)
 						.lines()
 						.map(line -> {
 							final String[] split = line.split(",");

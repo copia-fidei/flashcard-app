@@ -9,7 +9,7 @@
     </style>
 </head>
 <body>
-    <a href="/flashcards" class="back-link">← Back to Collections</a>
+    <a href="/flashcards/collections" class="back-link">← Back to Collections</a>
     <h1 class="collection-title">$collectionName</h1>
 
     <table class="flashcards-table">
@@ -31,30 +31,28 @@
 
     <script>
         function deleteCollection() {
-            if (!confirm('Are you sure you want to delete this collection? This action cannot be undone.')) {
-                return;
-            }
-
             fetch(window.location.pathname, {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'text/plain'
-                }
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                if (response.redirected) {
+                    window.location.href = response.url;
                 }
-                return response.text();
             })
-            .then(message => {
-                alert(message);
-                window.location.href = '/flashcards';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to delete collection: ' + error.message);
-            });
+
+<!--            .then(response => {-->
+<!--                if (response.status === 303) {-->
+<!--                    // Follow the redirect from the server-->
+<!--                    const redirectUrl = response.headers.get('Location');-->
+<!--                    window.location.href = redirectUrl || '/flashcards/collections';-->
+<!--                } else {-->
+<!--                    // Handle unexpected status codes-->
+<!--                    return response.text().then(error => {-->
+<!--                        console.error('Error status:', response.status, 'Response:', error);-->
+<!--                        alert('Failed to delete collection. Status: ' + response.status);-->
+<!--                    });-->
+<!--                }-->
+<!--            })-->
         }
     </script>
 </body>

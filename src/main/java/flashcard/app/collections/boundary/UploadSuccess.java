@@ -2,7 +2,6 @@
 package flashcard.app.collections.boundary;
 
 import flashcard.app.collection.entity.Collection;
-import flashcard.app.collections.entity.AllCollections;
 import flashcard.app.collections.entity.Collections;
 
 import javax.inject.Inject;
@@ -27,7 +26,7 @@ public class UploadSuccess {
 
 	@GET
     @Produces(MediaType.TEXT_HTML)
-    public Response getSuccessPage(@QueryParam("collection") String collectionName) {
+    public Response Page(@QueryParam("collection") String collectionName) {
 		if (collectionName.isEmpty()) {
 			// no collection has been added.
 		}
@@ -49,7 +48,7 @@ public class UploadSuccess {
 			}
 			final int cardCount = collection.get().Flashcards().size();
 			String html = new String(resource.readAllBytes(), UTF_8)
-					.replace("${collectionName}", collectionName != null ? collectionName : "Untitled")
+					.replace("${collectionName}", collectionName)
 					.replace("${cardCount}", String.valueOf(cardCount));
             
             return Response.ok(html).build();

@@ -1,6 +1,6 @@
 package flashcard.app.collection.boundary;
 
-import flashcard.app.Css;
+import flashcard.app.SharedCss;
 import flashcard.app.StackTrace;
 import flashcard.app.collection.entity.Collection;
 import flashcard.app.collections.entity.*;
@@ -8,32 +8,23 @@ import flashcard.app.collections.entity.*;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Optional;
 
 import static java.lang.System.lineSeparator;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 
-@Path("{collection}")
+@Path("/collections/{collection}")
 public class Flashcards_Collection {
 
 	@Inject
 	private Collections collections;
 
-	@GET
-	@Path("css")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getCss() {
-		final URL resourceAsStream = getClass()
- 				.getClassLoader()
-				.getResource("/html_templates/styles.css");
-
-		return resourceAsStream.toString();
-	}
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
@@ -68,7 +59,7 @@ public class Flashcards_Collection {
 				return htmlTemplate
 						.replace("$collectionName", collection.Name())
 						.replace("$flashcards", tableRows)
-						.replace("$stylesheet", Css.get());
+						.replace("$stylesheet", SharedCss.get());
 			}
 			else {
 				return name + System.lineSeparator().repeat(2) + URLDecoder.decode(name) + lineSeparator().repeat(2) + collections.List().get(1);
@@ -81,16 +72,22 @@ public class Flashcards_Collection {
 	}
 
 	@DELETE
-	@Produces(MediaType.TEXT_PLAIN)
-	public String deleteCollection(@PathParam("collection") String name) {
+	@Produces(MediaType.TEXT_HTML)
+	public Response deleteCollection(@PathParam("collection") String name) {
 		try {
 			if (collections.removeCollection(name)) {
-				return "Collection deleted successfully";
+				final String encode = URLEncoder.encode(name, UTF_8);
+				return Response
+						.seeOther(java.net.URI.create("/flashcards/delete-success?collection=" + encode)).build();
 			} else {
-				return "Collection not found";
+				return Response.status(Response.Status.NOT_FOUND)
+						.entity("Collection not found")
+						.build();
 			}
 		} catch (Exception e) {
-			return "Error deleting collection: " + e.getMessage();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity("Error deleting collection: " + e.getMessage())
+					.build();
 		}
 	}
 

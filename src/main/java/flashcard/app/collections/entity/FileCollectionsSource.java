@@ -21,6 +21,11 @@ public class FileCollectionsSource implements CollectionsSource {
 
 	private final Path collectionsDir;
 
+	private final Predicate<Path> filterCsvFiles = path -> path
+			.getFileName()
+			.toString()
+			.endsWith(".csv");
+
 	public FileCollectionsSource() {
 		this(Configuration.COLLECTIONS_DIR);
 	}
@@ -31,23 +36,14 @@ public class FileCollectionsSource implements CollectionsSource {
 
 	@Override
 	public List<Collection> get() {
-		try {
-			var list = new ArrayList<Collection>();
-			final Predicate<Path> filterCsvFiles = path -> path
-					.getFileName()
-					.toString()
-					.endsWith(".csv");
+		List<Collection> csvCollections = List.of();
+		try (var paths = Files.list(collectionsDir)) {
+			csvCollections = paths
+					.filter(filterCsvFiles)
+					.map(CsvFileCollection::new)
+					.collect(toList());
+		} catch (IOException ignored) {}
 
-			final List<Path>   files = Files.list(collectionsDir)
-											.filter(filterCsvFiles)
-											.collect(toList());
-
-			for (Path file : files) {
-				list.add(new CsvFileCollection(file));
-			}
-			return list;
-		} catch (IOException e) {
-			return List.of();
-		}
+		return csvCollections;
 	}
 }
