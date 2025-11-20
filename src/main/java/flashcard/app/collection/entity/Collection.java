@@ -18,6 +18,10 @@ public interface Collection {
 
 	List<Flashcard> Flashcards();
 
+	/**
+	 * @param pathParam a collection in the form of a URL path
+	 * @return whether it refers to this collection
+	 */
 	default boolean isReferredBy(String pathParam) {
 		return Name().equals(decode(pathParam, UTF_8));
 	}

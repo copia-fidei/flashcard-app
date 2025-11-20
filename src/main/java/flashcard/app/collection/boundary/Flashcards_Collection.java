@@ -1,6 +1,6 @@
 package flashcard.app.collection.boundary;
 
-import flashcard.app.SharedCss;
+import flashcard.app.Shared;
 import flashcard.app.StackTrace;
 import flashcard.app.collection.entity.Collection;
 import flashcard.app.collections.entity.*;
@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Optional;
@@ -59,12 +60,12 @@ public class Flashcards_Collection {
 				return htmlTemplate
 						.replace("$collectionName", collection.Name())
 						.replace("$flashcards", tableRows)
-						.replace("$stylesheet", SharedCss.get());
+						.replace("$stylesheet", Shared.CSS);
 			}
 			else {
+				// TODO replace with error Does not exist.
 				return name + System.lineSeparator().repeat(2) + URLDecoder.decode(name) + lineSeparator().repeat(2) + collections.List().get(1);
 			}
-			//return htmlTemplate;
 
 		} catch (Exception e) {
 			return new StackTrace(e).toString();
@@ -74,21 +75,22 @@ public class Flashcards_Collection {
 	@DELETE
 	@Produces(MediaType.TEXT_HTML)
 	public Response deleteCollection(@PathParam("collection") String name) {
-		try {
-			if (collections.removeCollection(name)) {
-				final String encode = URLEncoder.encode(name, UTF_8);
-				return Response
-						.seeOther(java.net.URI.create("/flashcards/delete-success?collection=" + encode)).build();
-			} else {
-				return Response.status(Response.Status.NOT_FOUND)
-						.entity("Collection not found")
-						.build();
-			}
-		} catch (Exception e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity("Error deleting collection: " + e.getMessage())
-					.build();
+		if (collections.removeCollection(name)) {
+			return redirectToSuccessPage(name);
+		} else {
+			return redirectToErrorPage(new IOException("Collection not found: " + name));
 		}
+	}
+
+	private Response redirectToErrorPage(IOException e) {
+		final String errorMessage = "Error deleting collection: " + e.getMessage();
+		final String encodedErrorMessage = URLEncoder.encode(errorMessage, UTF_8);
+		return Response.seeOther(URI.create("/flashcards/delete-failure?message=" + encodedErrorMessage)).build();
+	}
+
+	private Response redirectToSuccessPage(String collectionName) {
+		final String encodedName = URLEncoder.encode(collectionName, UTF_8);
+		return Response.seeOther(URI.create("/flashcards/delete-success?collection=" + encodedName)).build();
 	}
 
 	private String escapeHtml(String input) {

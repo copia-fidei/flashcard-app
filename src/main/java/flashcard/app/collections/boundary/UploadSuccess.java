@@ -1,62 +1,49 @@
 // File: src/main/java/flashcard/app/collections/boundary/UploadSuccess.java
 package flashcard.app.collections.boundary;
 
-import flashcard.app.collection.entity.Collection;
+import flashcard.app.HtmlTemplate;
 import flashcard.app.collections.entity.Collections;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Optional;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static javax.ws.rs.core.Response.ok;
+import static javax.ws.rs.core.Response.status;
 
 @Path("upload-success")
 public class UploadSuccess {
 
-	@Inject
-	private Collections collections;
+    private static final String PAGE_LOAD_ERROR = "Page could not be loaded";
+    private static final String COLLECTION_NOT_FOUND = "Collection not found";
+    private static final String NO_COLLECTION_SPECIFIED = "No collection specified";
 
+    @Inject
+    private Collections collections;
 
-	@GET
+    @GET
     @Produces(MediaType.TEXT_HTML)
-    public Response Page(@QueryParam("collection") String collectionName) {
-		if (collectionName.isEmpty()) {
-			// no collection has been added.
-		}
-
-
-        try (InputStream resource = getClass().getClassLoader()
-                .getResourceAsStream("/html_templates/upload-success.html")) {
-            
-            if (resource == null) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("Success page not found")
-                        .build();
-            }
-			final Optional<Collection> collection = collections.getCollection(collectionName);
-			if (collection.isEmpty()) {
-				return Response.status(Response.Status.NOT_FOUND)
-							.entity("Collection not found")
-							.build();
-			}
-			final int cardCount = collection.get().Flashcards().size();
-			String html = new String(resource.readAllBytes(), UTF_8)
-					.replace("${collectionName}", collectionName)
-					.replace("${cardCount}", String.valueOf(cardCount));
-            
-            return Response.ok(html).build();
-            
-        } catch (IOException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Error loading success page: " + e.getMessage())
-                    .build();
+    public Response page(@QueryParam("collection") String collectionName) {
+		// TODO this behaviour has to be specified.
+        if (collectionName == null || collectionName.isEmpty()) {
+            return status(Response.Status.BAD_REQUEST).entity(NO_COLLECTION_SPECIFIED).build();
         }
+
+		// TODO what to do here?
+		final var collection = collections.getCollection(collectionName);
+        if (collection.isEmpty()) {
+            return status(Response.Status.NOT_FOUND).entity(COLLECTION_NOT_FOUND).build();
+        }
+
+		return new HtmlTemplate("/html_templates/upload-success.html")
+				.get()
+				.map(template -> template
+						.replace("${collectionName}", collectionName)
+						.replace("${cardCount}", String.valueOf(collection.get().Flashcards().size())))
+				.map(ok()::entity)
+				.orElse(status(INTERNAL_SERVER_ERROR).entity(PAGE_LOAD_ERROR))
+				.build();
     }
 }

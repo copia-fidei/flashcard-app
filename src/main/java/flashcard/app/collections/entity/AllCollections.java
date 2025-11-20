@@ -16,7 +16,7 @@ import java.util.Optional;
 @Singleton
 public class AllCollections implements Collections {
 
-	private List<Collection> list = new ArrayList<>();
+	private final List<Collection> list = new ArrayList<>();
 
 	public AllCollections() {
 		list.addAll(new MockCollectionsSource().get());
