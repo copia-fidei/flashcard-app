@@ -1,7 +1,7 @@
 package flashcard.app.collections.boundary;
 
 import flashcard.app.Configuration;
-import flashcard.app.HtmlTemplate;
+import flashcard.app.HtmlTemplateLoader;
 import flashcard.app.Shared;
 import flashcard.app.collection.entity.Collection;
 import flashcard.app.collection.entity.CollectionImp;
@@ -28,7 +28,7 @@ import static javax.ws.rs.core.Response.*;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 
 @Path("collections")
-public class Flashcards {
+public class CollectionsResource {
 
     private static final String PAGE_LOAD_ERROR = "Page could not be loaded";
 
@@ -49,7 +49,9 @@ public class Flashcards {
 				Files.write(Configuration.COLLECTIONS_DIR.resolve(fileInfo.getFileName()), fileContent, CREATE);
 				collections.List().add(newCollection);
 
-				return redirectToSuccesPage(newCollection);
+				return redirectToErrorPage(new IOException("Test"));
+
+				//return redirectToSuccesPage(newCollection);
 			} catch (IOException e) {
 				return redirectToErrorPage(e);
 			}
@@ -59,9 +61,13 @@ public class Flashcards {
 	}
 
 	private static Response redirectToErrorPage(final IOException e) {
-		final String errorMessage        = "Error processing file: " + e.getMessage();
-		final String encodedErrorMessage = URLEncoder.encode(errorMessage, UTF_8);
-		return seeOther(URI.create("/flashcards/upload-failure?message=" + encodedErrorMessage)).build();
+		final String title = "Import failed";
+		final String encodedErrorTitle = URLEncoder.encode(title, UTF_8);
+		final String encodedErrorDescription = URLEncoder.encode(e.getMessage(), UTF_8);
+		return Response.seeOther(URI.create(
+				"/flashcards/error?title=" + encodedErrorTitle
+						+ "&description=" + encodedErrorDescription
+		)).build();
 	}
 
 	private static Response redirectToSuccesPage(final Collection collection) throws IOException {
@@ -93,13 +99,16 @@ public class Flashcards {
         }
         liElements.append(lineSeparator());
 
-        return new HtmlTemplate("/html_templates/flashcards.html")
-                .get()
-                .map(template -> template
-                        .replace("$collections", liElements.toString())
-                        .replace("$stylesheet", Shared.CSS))
-                .map(Response::ok)
-                .orElse(status(INTERNAL_SERVER_ERROR).entity(PAGE_LOAD_ERROR))
-                .build();
+		var htmlTemplateLoader = new HtmlTemplateLoader("/html_templates/flashcards.html");
+		try {
+			final String htmlTemplate = htmlTemplateLoader.loadHtml();
+			return Response.ok(htmlTemplate
+					.replace("$collections", liElements.toString())
+					.replace("$stylesheet", Shared.CSS))
+				.build();
+		} catch (IOException e) {
+			return status(INTERNAL_SERVER_ERROR).entity(PAGE_LOAD_ERROR).build();
+		}
+
     }
 }

@@ -40,6 +40,7 @@
             <param-value>
                 flashcard.app.collection.boundary,
                 flashcard.app.collections.boundary,
+                flashcard.app.result.boundary,
                 flashcard.app.monitor.boundary
             </param-value>
         </init-param>

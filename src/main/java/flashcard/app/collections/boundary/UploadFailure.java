@@ -1,10 +1,12 @@
 package flashcard.app.collections.boundary;
 
-import flashcard.app.HtmlTemplate;
+import flashcard.app.HtmlTemplateLoader;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.io.IOException;
 
 import static java.util.Objects.requireNonNullElse;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
@@ -19,12 +21,14 @@ public class UploadFailure {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public Response page(@QueryParam("message") String errorMessage) {
-        return new HtmlTemplate("/html_templates/upload-failure.html")
-                .get()
-                .map(template -> template
-						.replace("${errorMessage}", requireNonNullElse(errorMessage, NO_ERROR_MESSAGE_PROVIDED)))
-                .map(Response::ok)
-                .orElse(status(INTERNAL_SERVER_ERROR).entity(PAGE_LOAD_ERROR))
-                .build();
+		var htmlTemplateLoader = new HtmlTemplateLoader("/html_templates/upload-failure.html");
+		try {
+			final String htmlTemplate = htmlTemplateLoader.loadHtml();
+			return Response.ok(htmlTemplate
+					.replace("${errorMessage}", requireNonNullElse(errorMessage, NO_ERROR_MESSAGE_PROVIDED)))
+				.build();
+		} catch (IOException e) {
+			return status(INTERNAL_SERVER_ERROR).entity(PAGE_LOAD_ERROR).build();
+		}
     }
 }
