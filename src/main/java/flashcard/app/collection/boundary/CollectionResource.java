@@ -1,5 +1,6 @@
 package flashcard.app.collection.boundary;
 
+import flashcard.app.ErrorRedirect;
 import flashcard.app.HtmlTemplateLoader;
 import flashcard.app.Shared;
 import flashcard.app.StackTrace;
@@ -87,13 +88,7 @@ public class CollectionResource {
 	}
 
 	private Response redirectToErrorPage(IOException e) {
-		final String title = "Error deleting collection";
-		final String encodedErrorTitle = URLEncoder.encode(title, UTF_8);
-		final String encodedErrorDescription = URLEncoder.encode(e.getMessage(), UTF_8);
-		return Response.seeOther(URI.create(
-				"/flashcards/error?title=" + encodedErrorTitle
-				+ "description=" + encodedErrorDescription
-		)).build();
+		return ErrorRedirect.toErrorPage("Error deleting collection", e);
 	}
 
 	private Response redirectToSuccessPage(String collectionName) {

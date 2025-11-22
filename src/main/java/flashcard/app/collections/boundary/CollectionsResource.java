@@ -1,6 +1,7 @@
 package flashcard.app.collections.boundary;
 
 import flashcard.app.Configuration;
+import flashcard.app.ErrorRedirect;
 import flashcard.app.HtmlTemplateLoader;
 import flashcard.app.Shared;
 import flashcard.app.collection.entity.Collection;
@@ -61,13 +62,7 @@ public class CollectionsResource {
 	}
 
 	private static Response redirectToErrorPage(final IOException e) {
-		final String title = "Import failed";
-		final String encodedErrorTitle = URLEncoder.encode(title, UTF_8);
-		final String encodedErrorDescription = URLEncoder.encode(e.getMessage(), UTF_8);
-		return Response.seeOther(URI.create(
-				"/flashcards/error?title=" + encodedErrorTitle
-						+ "&description=" + encodedErrorDescription
-		)).build();
+		return ErrorRedirect.toErrorPage("Import failed", e);
 	}
 
 	private static Response redirectToSuccesPage(final Collection collection) throws IOException {
