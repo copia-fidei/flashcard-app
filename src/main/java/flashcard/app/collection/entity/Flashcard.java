@@ -10,11 +10,19 @@ public class Flashcard {
 		this.back = back;
 	}
 
+	/**
+	 * @return the front of the card
+	 */
+	public String Front() {
+		return front;
+	}
+
+
+	/**
+	 * @return the back of the card
+	 */
 	public String Back() {
 		return back;
 	}
 
-	public String Front() {
-		return front;
-	}
 }

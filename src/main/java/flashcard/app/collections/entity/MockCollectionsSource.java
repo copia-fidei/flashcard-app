@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MockCollectionsSource implements CollectionsSource {
 
-	private static final List<Collection> mockCollections = List.of(
+	private static final List<Collection> MOCK_COLLECTIONS = List.of(
 			new CollectionImp("English vocabulary", List.of(
 					new Flashcard("cat", "кот"),
 					new Flashcard("dog", "собака")
@@ -31,6 +31,6 @@ public class MockCollectionsSource implements CollectionsSource {
 
 	@Override
 	public List<Collection> get() {
-		return mockCollections;
+		return MOCK_COLLECTIONS;
 	}
 }

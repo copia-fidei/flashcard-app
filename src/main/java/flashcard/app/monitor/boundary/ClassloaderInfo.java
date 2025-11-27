@@ -1,6 +1,6 @@
 package flashcard.app.monitor.boundary;
 
-import flashcard.app.StackTrace;
+import jdk.jfr.StackTrace;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -30,7 +30,7 @@ public class ClassloaderInfo {
 		try {
 			return FileSystems.getFileSystem(getClass().getClassLoader().getResource("").toURI()).toString();
 		} catch (URISyntaxException e) {
-			return new StackTrace(e).toString();
+			return e.toString();
 		}
 	}
 

@@ -1,23 +1,25 @@
 package flashcard.app.collections.entity;
 
 import flashcard.app.Configuration;
+import flashcard.app.CsvParser;
 import flashcard.app.collection.entity.Collection;
-import flashcard.app.collection.entity.CsvFileCollection;
+import flashcard.app.collection.entity.CollectionImp;
+import flashcard.app.collection.entity.Flashcard;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.logging.Logger;
 
+import static java.nio.file.Files.readString;
 import static java.util.stream.Collectors.toList;
 
 public class FileCollectionsSource implements CollectionsSource {
+
+	private static Logger LOG = Logger.getLogger(FileCollectionsSource.class.getName());
 
 	private final Path collectionsDir;
 
@@ -40,10 +42,21 @@ public class FileCollectionsSource implements CollectionsSource {
 		try (var paths = Files.list(collectionsDir)) {
 			csvCollections = paths
 					.filter(filterCsvFiles)
-					.map(CsvFileCollection::new)
+					.map(this::toCollection)
 					.collect(toList());
 		} catch (IOException ignored) {}
 
 		return csvCollections;
+	}
+
+	private Collection toCollection(Path path) {
+		var flashcards = new ArrayList<Flashcard>();
+		var csvParser = new CsvParser();
+		try {
+			flashcards.addAll(csvParser.parse(readString(path)));
+		} catch (IOException e) {
+			LOG.warning("IO Exception occurred while retrieving flashcards from file.");
+		}
+		return new CollectionImp(path.getFileName().toString(), flashcards);
 	}
 }

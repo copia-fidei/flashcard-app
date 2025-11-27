@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$collectionName - Flashcards</title>
+    <title>{{collectionName}} - Flashcards</title>
     <style>
-        $stylesheet
+        {{{stylesheet}}}
     </style>
 </head>
 <body>
     <a href="/flashcards/collections" class="back-link">← Back to Collections</a>
-    <h1 class="collection-title">$collectionName</h1>
+    <h1 class="collection-title">{{collectionName}}</h1>
 
     <table class="flashcards-table">
         <thead>
@@ -21,7 +21,13 @@
             </tr>
         </thead>
         <tbody>
-            $flashcards
+            {{#flashcards}}
+            <tr>
+                <td>{{index}}</td>
+                <td>{{front}}</td>
+                <td>{{back}}</td>
+            </tr>
+            {{/flashcards}}
         </tbody>
     </table>
 
@@ -39,20 +45,6 @@
                     window.location.href = response.url;
                 }
             })
-
-<!--            .then(response => {-->
-<!--                if (response.status === 303) {-->
-<!--                    // Follow the redirect from the server-->
-<!--                    const redirectUrl = response.headers.get('Location');-->
-<!--                    window.location.href = redirectUrl || '/flashcards/collections';-->
-<!--                } else {-->
-<!--                    // Handle unexpected status codes-->
-<!--                    return response.text().then(error => {-->
-<!--                        console.error('Error status:', response.status, 'Response:', error);-->
-<!--                        alert('Failed to delete collection. Status: ' + response.status);-->
-<!--                    });-->
-<!--                }-->
-<!--            })-->
         }
     </script>
 </body>

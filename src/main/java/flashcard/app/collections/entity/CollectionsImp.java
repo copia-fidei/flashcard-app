@@ -11,7 +11,7 @@ import static java.net.URLDecoder.decode;
 
 public class CollectionsImp implements Collections {
 
-	private List<Collection> list = new ArrayList<>();
+	protected final List<Collection> list = new ArrayList<>();
 
 	public CollectionsImp(Collection... collections) {
 		this.list.addAll(Arrays.asList(collections));

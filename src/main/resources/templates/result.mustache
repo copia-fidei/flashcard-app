@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${errorTitle}</title>
+    <title>{{title}}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
             padding: 20px;
             line-height: 1.6;
         }
-        .error-description {
+        .description {
             background-color: #f8d7da;
             color: #721c24;
             padding: 15px;
@@ -35,9 +35,9 @@
     </style>
 </head>
 <body>
-<div class="error-description">
-    <h2>${errorTitle}</h2>
-    <p>${errorDescription}</p>
+<div class="description">
+    <h2>{{title}}</h2>
+    <p>{{description}}</p>
 </div>
 
 <a href="/flashcards/collections" class="back-link">Back to collections</a>

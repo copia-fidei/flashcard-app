@@ -1,17 +1,16 @@
 package flashcard.app;
 
-import flashcard.app.collection.entity.CsvFileCollection;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+// TODO does shared CSS work with Jersey MCV templates
 public class Shared {
 	private static Logger LOG = Logger.getLogger(Shared.class.getName());
 
-	private static final String LOCATION = "/html_templates/styles.css";
+	private static final String LOCATION = "/styles.css";
 
 	public static String CSS = init();
 

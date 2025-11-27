@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flashcards</title>
     <style>
-        $stylesheet
+        {{{stylesheet}}}
     </style>
 </head>
 <body>
@@ -14,7 +14,17 @@
 
     <div class="collections-header"><strong>All Your Collections:</strong></div>
     <div class="collections-list">
-        <ul>$collections</ul>
+        {{{EncodedName}}}
+        <ul>
+            {{#collections}}
+            <li>
+                <a href="{{EncodedName}}">
+                    {{Name}}
+
+                </a>
+            </li>
+            {{/collections}}
+        </ul>
     </div>
 
     <form class="button-container" method="post" enctype="multipart/form-data">

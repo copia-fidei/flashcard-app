@@ -1,37 +1,29 @@
 package flashcard.app.collections.boundary;
 
-import flashcard.app.Configuration;
-import flashcard.app.ErrorRedirect;
-import flashcard.app.HtmlTemplateLoader;
-import flashcard.app.Shared;
+import flashcard.app.*;
 import flashcard.app.collection.entity.Collection;
 import flashcard.app.collection.entity.CollectionImp;
-import flashcard.app.collection.entity.Flashcard;
 import flashcard.app.collections.entity.Collections;
+import flashcard.app.result.boundary.ResultRedirect;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.glassfish.jersey.server.mvc.Template;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
-import java.net.URI;
-import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
-import static java.lang.System.lineSeparator;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.util.stream.Collectors.toList;
-import static javax.ws.rs.core.Response.*;
-import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 
 @Path("collections")
 public class CollectionsResource {
-
-    private static final String PAGE_LOAD_ERROR = "Page could not be loaded";
 
 	@Inject
     private Collections collections;
@@ -44,15 +36,16 @@ public class CollectionsResource {
 
 		try (uploadedFile) {
 			try {
-				final byte[] fileContent = uploadedFile.readAllBytes();
-				var newCollection = new CollectionImp(fileInfo.getFileName(), parseCSV(fileContent));
-
-				Files.write(Configuration.COLLECTIONS_DIR.resolve(fileInfo.getFileName()), fileContent, CREATE);
+				final var fileContent   = uploadedFile.readAllBytes();
+				final var fileName      = fileInfo.getFileName();
+				final var csvParser     = new CsvParser();
+				final var flashcards    = csvParser.parse(new String(fileContent, UTF_8));
+				final var newCollection = new CollectionImp(fileName, flashcards);
+				// how to deal with exceptions?
+				Files.write(Configuration.COLLECTIONS_DIR.resolve(fileName), fileContent, CREATE);
 				collections.List().add(newCollection);
 
-				return redirectToErrorPage(new IOException("Test"));
-
-				//return redirectToSuccesPage(newCollection);
+				return redirectToSuccesPage(newCollection);
 			} catch (IOException e) {
 				return redirectToErrorPage(e);
 			}
@@ -61,49 +54,31 @@ public class CollectionsResource {
 		}
 	}
 
+
 	private static Response redirectToErrorPage(final IOException e) {
-		return ErrorRedirect.toErrorPage("Import failed", e);
+		return ResultRedirect.toResultPage("Import failed", e);
 	}
 
-	private static Response redirectToSuccesPage(final Collection collection) throws IOException {
-		return seeOther(URI.create("/flashcards/upload-success?collection=" + collection.EncodedName())).build();
+	private static Response redirectToSuccesPage(final Collection collection) {
+		return ResultRedirect.toResultPage("Import successful", "Collection " + collection.Name() + " has been successfully imported.");
 	}
 
-	private List<Flashcard> parseCSV(byte[] content) throws IOException {
-		return new String(content, UTF_8)
-				.lines()
-				.map(line -> {
-					final String[] split = line.split(",");
-					return new Flashcard(split[0], split[1]);
-				})
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	@Template(name = "/collections.mustache")
+	public Map<String, Object> view() {
+		// Needed workaround because otherwise the property EncodedName is not read by mustache.
+		final List<Map<String, String>> collectionsAsMap = collections.List().stream()
+				.map(collection -> Map.of(
+						"Name", collection.Name(), "EncodedName", collection.EncodedName()  // explicitly include EncodedName
+				))
 				.collect(toList());
-    }
 
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    public Response homepage() {
-        var liElements = new StringBuilder();
-        for (final var collection : collections.List()) {
-            liElements.append(lineSeparator())
-                    .append("<li><a href=\"")
-                    .append("collections/")
-                    .append(collection.EncodedName())
-                    .append("\">")
-                    .append(collection.Name())
-                    .append("</a></li>");
-        }
-        liElements.append(lineSeparator());
+		final var model = Map.of(
+				"stylesheet", Shared.CSS,
+				"collections", collectionsAsMap);
+		return model;
+	}
 
-		var htmlTemplateLoader = new HtmlTemplateLoader("/html_templates/flashcards.html");
-		try {
-			final String htmlTemplate = htmlTemplateLoader.loadHtml();
-			return Response.ok(htmlTemplate
-					.replace("$collections", liElements.toString())
-					.replace("$stylesheet", Shared.CSS))
-				.build();
-		} catch (IOException e) {
-			return status(INTERNAL_SERVER_ERROR).entity(PAGE_LOAD_ERROR).build();
-		}
 
-    }
 }
