@@ -1,14 +1,13 @@
 package flashcard.app.collection.entity;
 
-import flashcard.app.collections.boundary.CollectionsResource;
-
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
-
-import static java.net.URLDecoder.decode;
-import static java.net.URLEncoder.encode;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import java.util.logging.Logger;
 
 public interface Collection {
+	
+	Logger LOG = Logger.getLogger(Collection.class.getName());
 
 	String Name();
 
@@ -16,18 +15,15 @@ public interface Collection {
 	 * @return
 	 */
 	default String EncodedName() {
-		return encode(Name(), UTF_8);
+		try {
+			return new URI(null, null, Name(), null).toASCIIString();
+		} catch (URISyntaxException e) {
+			LOG.severe("Error during encoding of the collection name: " + e.getMessage());
+			return null;
+		}
 	}
 
 	List<Flashcard> Flashcards();
 
 	void save();
-
-	/**
-	 * @param pathParam a collection name from the url
-	 * @return whether it refers to this collection
-	 */
-	default boolean isReferredBy(String pathParam) {
-		return Name().equals(decode(pathParam, UTF_8));
-	}
 }

@@ -12,23 +12,11 @@ public interface Collections {
 	 */
     List<Collection> List();
 
-	/**
-	 * Retrieves a collection that is referred to by the url path name parameter.
-	 *
-	 * @param pathParam		the name parameter of the url path
-	 * @return				an optional result of the found collection
-	 */
-	default Optional<Collection> getCollection(String pathParam) {
-		return List().stream().filter(collection -> collection.isReferredBy(pathParam)).findFirst();
+	default Optional<Collection> getCollection(String name) {
+		return List().stream().filter(collection -> collection.Name().equals(name)).findFirst();
 	}
 
-	/**
-	 * Removes a collection that is referred to by the url path name parameter.
-	 *
-	 * @param pathParam		the name parameter of the url path
-	 * @return				true if any elements were removed
-	 */
-	default boolean removeCollection(String pathParam) {
-		return List().removeIf(collection -> collection.isReferredBy(pathParam));
+	default boolean removeCollection(String name) {
+		return List().removeIf(collection -> collection.Name().equals(name));
 	}
 }
