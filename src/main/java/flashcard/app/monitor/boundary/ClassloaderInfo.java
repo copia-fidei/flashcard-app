@@ -1,7 +1,5 @@
 package flashcard.app.monitor.boundary;
 
-import jdk.jfr.StackTrace;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -24,23 +22,12 @@ public class ClassloaderInfo {
 		return getClass().getClassLoader().getResource("") + lineSeparator();
 	}
 
-	@Path("fs")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String fileSystem() {
-		try {
-			return FileSystems.getFileSystem(getClass().getClassLoader().getResource("").toURI()).toString();
-		} catch (URISyntaxException e) {
-			return e.toString();
-		}
-	}
-
-	MessageFormat format = new MessageFormat(
-			 lineSeparator() +
-			"{0}" + lineSeparator() +
-			"	{1}" + lineSeparator() +
-			"	{2}" + lineSeparator() +
-			"	{3}" + lineSeparator()
-	);
+	final MessageFormat format = new MessageFormat("""
+			{0}
+			    {1}
+			    {2}
+			    {3}
+			""");
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -63,8 +50,8 @@ public class ClassloaderInfo {
 	}
 
 	private static String urlsOf(ClassLoader cl) {
-		if (cl instanceof URLClassLoader) {
-			return vertical(", ", ((URLClassLoader) cl).getURLs());
+		if (cl instanceof final URLClassLoader urlClassLoader) {
+			return vertical(", ", urlClassLoader.getURLs());
 		}
 		else return "";
 	}

@@ -2,7 +2,6 @@ package flashcard.app;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.mvc.MvcFeature;
 import org.glassfish.jersey.server.mvc.mustache.MustacheMvcFeature;
 
 import java.nio.file.Path;

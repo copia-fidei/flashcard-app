@@ -5,6 +5,7 @@ import flashcard.app.collection.entity.CollectionImp;
 import flashcard.app.collection.entity.Flashcard;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public class MockCollectionsSource implements CollectionsSource {
 

@@ -1,8 +1,8 @@
 package flashcard.app.collection.boundary;
 
+import flashcard.app.collection.entity.Collection;
 import flashcard.app.result.boundary.ResultRedirect;
-import flashcard.app.Shared;
-import flashcard.app.collection.entity.Flashcard;
+import flashcard.app.Css;
 import flashcard.app.collections.entity.*;
 import org.glassfish.jersey.server.mvc.Viewable;
 
@@ -25,40 +25,20 @@ public class CollectionResource {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public Response collection(@PathParam("collection") String name) {
-		System.out.println(name);
 		final var optCollection = collections.getCollection(name);
-		if (optCollection.isPresent()) {
-			final var collection = optCollection.get();
-			class Row {
-				int index;
-				String front;
-				String back;
-				Row(int index, String front, String back) {
-					this.index = index;
-					this.front = front;
-					this.back = back;
-				}
-			}
-			final List<Flashcard> flashcards = collection.Flashcards();
-			final List<Row> rows = new ArrayList<>();
-			for (int i = 0; i < flashcards.size(); i++) {
-				final Flashcard flashcard = flashcards.get(i);
-				rows.add(new Row(i, flashcard.Front(), flashcard.Back()));
-			}
-			var data = Map.of(
-					"collectionName", collection.Name(),
-					"stylesheet", Shared.CSS,
-					"flashcards", rows);
-
-			return Response.ok(new Viewable("/collection.mustache", data)).build();
-		}
-		else {
+		if (optCollection.isEmpty()) {
 			return ResultRedirect.toResultPage("Collection does not exist", "Collection " + name + " does not exist.");
 		}
 
+		final var collection = optCollection.get();
+		final var data = Map.of(
+				"collectionName", collection.Name(),
+				"stylesheet", Css.SHARED,
+				"flashcards", TableRow.getRows(collection));
 
-//		return new CollectionHtmlResponse(collections, name).Response();
+		return Response.ok(new Viewable("/collection.mustache", data)).build();
 	}
+
 
 	@DELETE
 	@Produces(MediaType.TEXT_HTML)

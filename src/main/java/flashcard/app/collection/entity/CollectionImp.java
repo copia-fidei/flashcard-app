@@ -5,9 +5,9 @@ import java.util.List;
 
 public class CollectionImp implements Collection {
 
-	private String name;
+	private final String name;
 
-	private List<Flashcard> flashcards = new ArrayList<>();
+	private final List<Flashcard> flashcards = new ArrayList<>();
 
 	public CollectionImp(final String name) { this.name = name; }
 
@@ -20,7 +20,6 @@ public class CollectionImp implements Collection {
 	public String Name() {
 		return name;
 	}
-
 
 	@Override
 	public List<Flashcard> Flashcards() {

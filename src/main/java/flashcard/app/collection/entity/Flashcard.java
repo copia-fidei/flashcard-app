@@ -17,7 +17,6 @@ public class Flashcard {
 		return front;
 	}
 
-
 	/**
 	 * @return the back of the card
 	 */
@@ -25,4 +24,9 @@ public class Flashcard {
 		return back;
 	}
 
+	@Override
+	public String toString() {
+		return "Front: " + front + System.lineSeparator() +
+				"Back: " + back;
+	}
 }

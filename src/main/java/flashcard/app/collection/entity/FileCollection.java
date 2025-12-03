@@ -7,6 +7,7 @@ import java.util.List;
 
 import static java.nio.file.StandardOpenOption.CREATE;
 
+// unused right now
 public class FileCollection extends CollectionImp {
 
 	private final Path directory;
@@ -26,6 +27,4 @@ public class FileCollection extends CollectionImp {
 			throw new RuntimeException(e);
 		}
 	}
-
-
 }
