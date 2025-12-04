@@ -7,7 +7,6 @@ import org.glassfish.jersey.server.mvc.mustache.MustacheMvcFeature;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-//@ApplicationPath("service")
 public class Configuration
 		extends ResourceConfig
 {

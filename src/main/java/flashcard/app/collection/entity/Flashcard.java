@@ -1,5 +1,7 @@
 package flashcard.app.collection.entity;
 
+import static java.lang.System.lineSeparator;
+
 public class Flashcard {
 
 	private final String front;
@@ -26,7 +28,7 @@ public class Flashcard {
 
 	@Override
 	public String toString() {
-		return "Front: " + front + System.lineSeparator() +
+		return "Front: " + front + lineSeparator() +
 				"Back: " + back;
 	}
 }

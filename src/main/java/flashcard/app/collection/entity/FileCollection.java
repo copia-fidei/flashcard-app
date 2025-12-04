@@ -2,29 +2,28 @@ package flashcard.app.collection.entity;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.List;
 
-import static java.nio.file.StandardOpenOption.CREATE;
+public class FileCollection extends CollectionInMemory {
 
-// unused right now
-public class FileCollection extends CollectionImp {
+	private final Path filePath;
 
-	private final Path directory;
-	private final byte[] fileContent;
+	public FileCollection(final Path filePath, final List<Flashcard> flashcards) {
+		super(filePath.getFileName().toString(), flashcards);
 
-	public FileCollection(final Path directory, final String fileName, final byte[] fileContent, final List<Flashcard> flashcards) {
-		super(fileName, flashcards);
-		this.directory = directory;
-		this.fileContent = fileContent;
+		this.filePath = filePath;
 	}
 
 	@Override
-	public void save() {
+	public void delete() throws CouldNotBeDeleted {
 		try {
-			Files.write(directory.resolve(Name()), fileContent, CREATE);
+			Files.delete(filePath);
+		} catch (NoSuchFileException e) {
+			throw Collection.CouldNotBeDeleted.becauseItDoesNotExist(Name(), e);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new CouldNotBeDeleted(e);
 		}
 	}
 }

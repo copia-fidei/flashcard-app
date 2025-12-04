@@ -15,7 +15,7 @@ public class ResultResource {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	@Template(name = "/result.mustache")
-	public Map<String, String> page(@QueryParam("title") String title, @QueryParam("description") String description) {
+	public Map<String, String> show(@QueryParam("title") String title, @QueryParam("description") String description) {
 		return Map.of("title", title, "description", description);
 	}
 }

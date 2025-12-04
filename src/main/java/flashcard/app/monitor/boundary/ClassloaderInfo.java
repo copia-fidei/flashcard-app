@@ -4,9 +4,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.net.URISyntaxException;
 import java.net.URLClassLoader;
-import java.nio.file.FileSystems;
 import java.text.MessageFormat;
 import java.util.Arrays;
 

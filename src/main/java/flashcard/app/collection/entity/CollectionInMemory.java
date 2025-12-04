@@ -3,15 +3,17 @@ package flashcard.app.collection.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollectionImp implements Collection {
+public class CollectionInMemory implements Collection {
 
 	private final String name;
 
 	private final List<Flashcard> flashcards = new ArrayList<>();
 
-	public CollectionImp(final String name) { this.name = name; }
+	public CollectionInMemory(final String name) {
+		this(name, List.of());
+	}
 
-	public CollectionImp(final String name, final List<Flashcard> flashcards) {
+	public CollectionInMemory(final String name, final List<Flashcard> flashcards) {
 		this.name = name;
 		this.flashcards.addAll(flashcards);
 	}
@@ -27,7 +29,9 @@ public class CollectionImp implements Collection {
 	}
 
 	@Override
-	public void save() {}
+	public void delete() throws CouldNotBeDeleted {
+		throw new CouldNotBeDeleted("Collection only exists in memory. Changes are not persisted.");
+	}
 
 	@Override
 	public String toString() {

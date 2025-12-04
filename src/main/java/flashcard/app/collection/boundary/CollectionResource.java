@@ -10,10 +10,8 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Path("/collections/{collection}")
@@ -24,7 +22,7 @@ public class CollectionResource {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public Response collection(@PathParam("collection") String name) {
+	public Response showCollection(@PathParam("collection") String name) {
 		final var optCollection = collections.getCollection(name);
 		if (optCollection.isEmpty()) {
 			return ResultRedirect.toResultPage("Collection does not exist", "Collection " + name + " does not exist.");
@@ -43,15 +41,26 @@ public class CollectionResource {
 	@DELETE
 	@Produces(MediaType.TEXT_HTML)
 	public Response deleteCollection(@PathParam("collection") String name) {
-		if (collections.removeCollection(name)) {
+		final Optional<Collection> optCollection = collections.getCollection(name);
+		if (optCollection.isEmpty()) {
+			return redirectToErrorPage("Collection '" + name + " not found.");
+		}
+		try {
+			final var collection = optCollection.get();
+			collection.delete();
+			collections.List().remove(collection);
 			return redirectToSuccessPage(name);
-		} else {
-			return redirectToErrorPage(new IOException("Collection not found: " + name));
+		} catch (Collection.CouldNotBeDeleted e) {
+			return redirectToErrorPage(e);
 		}
 	}
 
-	private Response redirectToErrorPage(IOException e) {
-		return ResultRedirect.toResultPage("Error deleting collection", e);
+	private Response redirectToErrorPage(Exception message) {
+		return ResultRedirect.toResultPage("Error deleting collection", message);
+	}
+
+	private Response redirectToErrorPage(String message) {
+		return ResultRedirect.toResultPage("Error deleting collection", message);
 	}
 
 	private Response redirectToSuccessPage(String collectionName) {

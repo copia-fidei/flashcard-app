@@ -29,16 +29,17 @@ public class CollectionsResource {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadFile(
+    public Response importFile(
             @FormDataParam("file") InputStream uploadedFile,
-            @FormDataParam("file") FormDataContentDisposition fileInfo) {
+            @FormDataParam("file") FormDataContentDisposition fileInfo
+	) {
 
 		final ImportedFile importedFile = new ImportedFile(fileInfo.getFileName());
 		if (importedFile.doesNotEndWith(".csv", ".apkg")) {
-			return ResultRedirect.toResultPage("Import failed", "File type is not supported");
+			return redirectToErrorPage("File type is not supported");
 		}
 		if (importedFile.alreadyExists()) {
-			return ResultRedirect.toResultPage("Import failed", "File already exists");
+			return redirectToErrorPage("File already exists");
 		}
 
 		byte[] fileContent = new byte[0];
@@ -48,8 +49,7 @@ public class CollectionsResource {
 			} catch (IOException e) {
 				return redirectToErrorPage("File content could not be read");
 			}
-		} catch (IOException ignored) {} // Error while closing do not redirect
-
+		} catch (IOException ignored) {} // Error while closing, do not redirect
 
 		final String fileName = fileInfo.getFileName();
 		final java.nio.file.Path filePath;
@@ -60,21 +60,23 @@ public class CollectionsResource {
 		}
 
 		FlashcardRetriever retriever = switch (importedFile.getExtension()) {
-			case ".csv" -> new CsvParser(new String(fileContent));
+			case ".csv"  -> new  CsvParser(new String(fileContent));
 			case ".apkg" -> new ApkgParser(filePath);
 
-			default -> null; // should never happen, because of the guard at the start of this method that filters based on file endings
+			// default case, can never happen, because of the guard
+			// at the start of this method that filters out file endings that are not supported
+			default -> null;
 		};
 
 		try {
-			var flashcards = retriever.get(); // exeption happens here
+			var flashcards = retriever.get(); // exception happens here
 			// these will not be called anymore
-			final var newCollection = new CollectionImp(fileName, flashcards);
+			final var newCollection = new FileCollection(filePath, flashcards);
 			collections.List().add(newCollection);
 			return redirectToSuccesPage(newCollection);
-		} catch (Exception e) {
-			// if the flashcards could not be retrieved no collection is added to the collections
-			// the file stays on the server though
+		} catch (FlashcardRetriever.CouldNotRetrieve e) {
+			// if the flashcards could not be retrieved, no collection is added to the collections
+			// nevertheless the imported file that was saved on the server is kept
 		}
 		return redirectToErrorPage("File format could not be understood");
 	}
@@ -97,23 +99,20 @@ public class CollectionsResource {
 	private static Response redirectToErrorPage(final String message) {
 		return ResultRedirect.toResultPage("Import failed", message);
 	}
-	private static Response redirectToErrorPage(final IOException e) {
-		return ResultRedirect.toResultPage("Import failed", e);
-	}
 
 	private static Response redirectToSuccesPage(final Collection collection) {
-		return ResultRedirect.toResultPage("Import successful", "Collection " + collection.Name() + " has been successfully imported.");
+		return ResultRedirect.toResultPage("Import successful", "Collection " + collection.Name() + " has been imported successfully.");
 	}
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	@Template(name = "/collections.mustache")
-	public Map<String, Object> view() {
+	public Map<String, Object> listCollections() {
 		// Needed workaround because otherwise the property EncodedName is not read by mustache.
 		final List<Map<String, String>> collectionsAsMap = collections.List().stream()
 				.map(collection -> Map.of(
 						"Name", collection.Name(),
-						"EncodedName", collection.EncodedName()  // explicitly include EncodedName
+						"EncodedName", collection.EncodedName()
 				))
 				.toList();
 

@@ -4,7 +4,7 @@ import java.util.List;
 
 public class CsvParser implements FlashcardRetriever {
 
-	private String csvContent;
+	private final String csvContent;
 
 	public CsvParser(final String csvContent) { this.csvContent = csvContent; }
 

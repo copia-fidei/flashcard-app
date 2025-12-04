@@ -43,7 +43,7 @@ public class ApkgParser implements FlashcardRetriever {
 				}
 			}
 		} catch (SQLException e) {
-			flashcards.clear();
+			flashcards.clear();	// rollback
 
 			throw new CouldNotRetrieve("Database could not be read." , e);
 		}

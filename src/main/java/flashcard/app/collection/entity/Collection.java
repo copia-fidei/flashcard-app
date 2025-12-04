@@ -12,18 +12,37 @@ public interface Collection {
 	String Name();
 
 	/**
-	 * @return
+	 * @return	the name encoded in ASCII format for urls.
 	 */
 	default String EncodedName() {
 		try {
 			return new URI(null, null, Name(), null).toASCIIString();
 		} catch (URISyntaxException e) {
-			LOG.severe("Error during encoding of the collection name: " + e.getMessage());
+			LOG.severe("Error during encoding of the collection name '" + Name() + "': " + e.getMessage());
 			return null;
 		}
 	}
 
 	List<Flashcard> Flashcards();
 
-	void save();
+	void delete() throws CouldNotBeDeleted;
+
+	class CouldNotBeDeleted extends Exception {
+
+		public CouldNotBeDeleted(final String message) {
+			super(message);
+		}
+
+		static CouldNotBeDeleted becauseItDoesNotExist(String collectionName, Throwable throwable) {
+			return new CouldNotBeDeleted("Collection " + collectionName + " could not be deleted because it does not exist", throwable);
+		}
+
+		public CouldNotBeDeleted(final Throwable cause) {
+			super(cause);
+		}
+
+		public CouldNotBeDeleted(String message, Throwable cause) {
+			super(message, cause);
+		}
+	}
 }
