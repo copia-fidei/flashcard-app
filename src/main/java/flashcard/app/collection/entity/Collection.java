@@ -33,7 +33,15 @@ public interface Collection {
 			super(message);
 		}
 
-		static CouldNotBeDeleted becauseItDoesNotExist(String collectionName, Throwable throwable) {
+		public static CouldNotBeDeleted name(String collectionName, Throwable t) {
+			return new CouldNotBeDeleted("Collection " + collectionName + " could not be deleted", t);
+		}
+
+		public static CouldNotBeDeleted becauseItDoesNotExist(String collectionName) {
+			return new CouldNotBeDeleted("Collection " + collectionName + " could not be deleted because it does not exist");
+		}
+
+		public static CouldNotBeDeleted becauseItDoesNotExist(String collectionName, Throwable throwable) {
 			return new CouldNotBeDeleted("Collection " + collectionName + " could not be deleted because it does not exist", throwable);
 		}
 

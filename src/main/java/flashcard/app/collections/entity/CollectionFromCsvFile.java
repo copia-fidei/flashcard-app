@@ -1,6 +1,6 @@
 package flashcard.app.collections.entity;
 
-import flashcard.app.collection.entity.CsvParser;
+import flashcard.app.collection.entity.FlashcardsFromCsvFile;
 import flashcard.app.collection.entity.Collection;
 import flashcard.app.collection.entity.FileCollection;
 
@@ -26,10 +26,10 @@ public class CollectionFromCsvFile implements CollectionsSource {
 		try {
 			csvContent = Files.readString(csvFile);
 		} catch (IOException e) {
-			LOG.warning("CSV file " + csvFile + " could be read: " + e.getMessage());
+			LOG.warning("CSV file " + csvFile + " could not be read: " + e.getMessage());
 
 			return List.of();
 		}
-		return List.of(new FileCollection(csvFile, new CsvParser(csvContent).get()));
+		return List.of(new FileCollection(csvFile, new FlashcardsFromCsvFile(csvContent).get()));
 	}
 }

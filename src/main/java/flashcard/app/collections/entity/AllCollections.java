@@ -1,5 +1,7 @@
 package flashcard.app.collections.entity;
 
+import flashcard.app.PostgresqlDbFromKaraf;
+
 import javax.inject.Singleton;
 
 /**
@@ -16,5 +18,7 @@ public class AllCollections extends CollectionsImp {
 	public AllCollections() {
 		list.addAll(new MockCollections().get());
 		list.addAll(new CollectionsFromFolder().get());
+		list.addAll(new CollectionsFromDb(new PostgresqlDbFromKaraf()).get());
+
 	}
 }

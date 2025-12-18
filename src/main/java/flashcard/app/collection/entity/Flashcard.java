@@ -1,8 +1,10 @@
 package flashcard.app.collection.entity;
 
-import static java.lang.System.lineSeparator;
+import java.util.Objects;
 
-public class Flashcard {
+import static java.util.Comparator.comparing;
+
+public class Flashcard implements Comparable<Flashcard> {
 
 	private final String front;
 	private final String back;
@@ -27,8 +29,23 @@ public class Flashcard {
 	}
 
 	@Override
+	public boolean equals(final Object o) {
+		if (!(o instanceof final Flashcard flashcard)) return false;
+		return Objects.equals(front, flashcard.front) && Objects.equals(back, flashcard.back);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(front, back);
+	}
+
+	@Override
 	public String toString() {
-		return "Front: " + front + lineSeparator() +
-				"Back: " + back;
+		return "Front: " + front + ", " + "Back: " + back;
+	}
+
+	@Override
+	public int compareTo(final Flashcard o) {
+		return comparing(Flashcard::Front).thenComparing(Flashcard::Back).compare(this, o);
 	}
 }

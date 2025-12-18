@@ -1,8 +1,10 @@
 package flashcard.app.collections.boundary;
 
-import flashcard.app.*;
-import flashcard.app.collection.entity.*;
-import flashcard.app.collections.entity.Collections;
+import flashcard.app.Css;
+import flashcard.app.Extensions;
+import flashcard.app.PostgresqlDbFromKaraf;
+import flashcard.app.collection.entity.Collection;
+import flashcard.app.collections.entity.*;
 import flashcard.app.result.boundary.ResultRedirect;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -12,17 +14,14 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.*;
-import java.nio.file.Files;
-import java.util.Arrays;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import static flashcard.app.Configuration.COLLECTIONS_DIR;
-import static java.nio.file.StandardOpenOption.CREATE;
-
 @Path("collections")
 public class CollectionsResource {
+
+	private static final PostgresqlDbFromKaraf DATABASE = new PostgresqlDbFromKaraf();
 
 	@Inject
     private Collections collections;
@@ -34,66 +33,32 @@ public class CollectionsResource {
             @FormDataParam("file") FormDataContentDisposition fileInfo
 	) {
 
-		final ImportedFile importedFile = new ImportedFile(fileInfo.getFileName());
-		if (importedFile.doesNotEndWith(".csv", ".apkg")) {
+		final String fileName = fileInfo.getFileName();
+
+		if (Extensions.hasNoneOf(fileName, ".csv", ".apkg")) {
 			return redirectToErrorPage("File type is not supported");
 		}
-		if (importedFile.alreadyExists()) {
-			return redirectToErrorPage("File already exists");
-		}
-
-		byte[] fileContent = new byte[0];
-		try (uploadedFile) {
-			try {
-				fileContent = uploadedFile.readAllBytes();
-			} catch (IOException e) {
-				return redirectToErrorPage("File content could not be read");
+		AlreadyExists check = new AlreadyExistsInDatabase(DATABASE);
+		// If you want check if the file was saved on the server instead:
+		//AlreadyExists check = new FileAlreadyExists(COLLECTIONS_DIR);
+		try {
+			if (check.alreadyExists(fileName)) {
+				return redirectToErrorPage("Collection " + fileName + " already exists");
 			}
-		} catch (IOException ignored) {} // Error while closing, do not redirect
+		} catch (AlreadyExists.CouldNotBeDetermined e) {
+			return redirectToErrorPage(e.getMessage());
+		}
 
-		final String fileName = fileInfo.getFileName();
-		final java.nio.file.Path filePath;
+		final Collection newCollection;
 		try {
-			filePath = Files.write(COLLECTIONS_DIR.resolve(fileName), fileContent, CREATE);
-		} catch (IOException e) {
-			return redirectToErrorPage("Collection could not be saved");
+			newCollection = new DatabaseImporter(DATABASE, fileName, uploadedFile).importCollection();
+			// If you want to use the file importer instead:
+			//newCollection = new FileImporter(COLLECTIONS_DIR, fileName, uploadedFile).importCollection();
+		} catch (Importer.CouldNotImport e) {
+			return redirectToErrorPage(e.getMessage());
 		}
-
-		FlashcardRetriever retriever = switch (importedFile.getExtension()) {
-			case ".csv"  -> new  CsvParser(new String(fileContent));
-			case ".apkg" -> new ApkgParser(filePath);
-
-			// default case, can never happen, because of the guard
-			// at the start of this method that filters out file endings that are not supported
-			default -> null;
-		};
-
-		try {
-			var flashcards = retriever.get(); // exception happens here
-			// these will not be called anymore
-			final var newCollection = new FileCollection(filePath, flashcards);
-			collections.List().add(newCollection);
-			return redirectToSuccesPage(newCollection);
-		} catch (FlashcardRetriever.CouldNotRetrieve e) {
-			// if the flashcards could not be retrieved, no collection is added to the collections
-			// nevertheless the imported file that was saved on the server is kept
-		}
-		return redirectToErrorPage("File format could not be understood");
-	}
-
-	record ImportedFile(String fileName) {
-
-		boolean doesNotEndWith(String... extensions) {
-			return Arrays.stream(extensions).noneMatch(fileName::endsWith);
-		}
-
-		boolean alreadyExists() {
-			return Files.exists(COLLECTIONS_DIR.resolve(fileName));
-		}
-
-		String getExtension() {
-			return fileName.substring(fileName.lastIndexOf("."));
-		}
+		collections.List().add(newCollection);
+		return redirectToSuccesPage(newCollection);
 	}
 
 	private static Response redirectToErrorPage(final String message) {

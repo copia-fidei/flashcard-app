@@ -44,3 +44,5 @@ bin/
 
 ### Additional ###
 .lib-sources
+src/test/resources/db.properties
+

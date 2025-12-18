@@ -1,0 +1,38 @@
+package flashcard.app.collection.entity;
+
+import flashcard.app.Extensions;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
+import static java.nio.file.Files.createTempDirectory;
+import static java.nio.file.Files.createTempFile;
+
+public class TemporaryDatabaseLocation {
+
+	private final String extension;
+
+	// two primary constructors unfortunately
+	public TemporaryDatabaseLocation(final String fileNameWithExtension) {
+		this.extension = Extensions.getExtension(fileNameWithExtension);
+	}
+
+	TemporaryDatabaseLocation(final Path pathWithExtension) {
+		this.extension = Extensions.getExtension(pathWithExtension);
+	}
+
+	public Path path() throws NotAvailable {
+		try {
+			return createTempFile(createTempDirectory("flashcards_"), null, extension);
+		} catch (IOException e) {
+			throw new NotAvailable("Temporary files could not be created", e);
+		}
+	}
+
+	public static class NotAvailable extends Exception {
+
+		public NotAvailable(final String s, final Throwable t) {
+			super(s, t);
+		}
+	}
+}

@@ -2,11 +2,11 @@ package flashcard.app.collection.entity;
 
 import java.util.List;
 
-public class CsvParser implements FlashcardRetriever {
+public class FlashcardsFromCsvFile implements RetrievedFlashcards {
 
 	private final String csvContent;
 
-	public CsvParser(final String csvContent) { this.csvContent = csvContent; }
+	public FlashcardsFromCsvFile(final String csvContent) { this.csvContent = csvContent; }
 
 	@Override
 	public List<Flashcard> get() {
