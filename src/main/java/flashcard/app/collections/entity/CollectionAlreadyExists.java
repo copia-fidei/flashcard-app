@@ -1,6 +1,6 @@
 package flashcard.app.collections.entity;
 
-public interface AlreadyExists {
+public interface CollectionAlreadyExists {
 
 	boolean alreadyExists(String collectionName) throws CouldNotBeDetermined;
 

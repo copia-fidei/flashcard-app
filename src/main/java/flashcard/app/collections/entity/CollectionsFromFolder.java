@@ -13,13 +13,14 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static flashcard.app.Extensions.getExtension;
+import static java.util.logging.Logger.getLogger;
 
 /**
  * All the collections from the collections directory.
  */
 public class CollectionsFromFolder implements CollectionsSource {
 
-	private static final Logger LOG = Logger.getLogger(CollectionsFromFolder.class.getName());
+	private static final Logger LOG = getLogger(CollectionsFromFolder.class.getName());
 
 	private final Path collectionsDir;
 

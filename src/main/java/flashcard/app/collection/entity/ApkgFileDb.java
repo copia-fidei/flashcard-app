@@ -2,16 +2,18 @@ package flashcard.app.collection.entity;
 
 import java.nio.file.Path;
 
-public interface ExtractedSqliteDb {
+/**
+ * The sqlite database from an APKG file, which is a sqlite database.
+ */
+public interface ApkgFileDb {
 
 	/**
-	 * Extracts the database from the APKG file into a temporary location.
-	 *
-	 * Info: Because the extracted database is a temporary file and should be deleted after use.
+	 * The temporary location of the extracted database.
+	 * The extracted database is a temporary file and should be deleted after use.
 	 *
 	 * @return	the temporary location of the extracted database, delete after use.
 	 */
-	Path get() throws NotAvailable;
+	Path tmpLocation() throws NotAvailable;
 
 	class NotAvailable extends Exception {
 

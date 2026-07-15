@@ -13,18 +13,18 @@ import static java.nio.file.FileSystems.newFileSystem;
 import static java.nio.file.Files.*;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-public class ExtractedDbFromPath implements ExtractedSqliteDb {
+public class DbFromPath implements ApkgFileDb {
 
 	private final Path apkgFile;
 
-	public ExtractedDbFromPath(final Path apkgFile) { this.apkgFile = apkgFile; }
+	public DbFromPath(final Path apkgFile) { this.apkgFile = apkgFile; }
 
 	@Override
-	public Path get() throws NotAvailable {
+	public Path tmpLocation() throws NotAvailable {
 		try (var fileSystem = newFileSystem(apkgFile)) {
 			Path dbToUse = findDatabase(fileSystem);
 			
-			return copy(dbToUse, new TemporaryDatabaseLocation(dbToUse).path(), REPLACE_EXISTING);
+			return copy(dbToUse, new TempDbLocation(dbToUse).path(), REPLACE_EXISTING);
 		} catch (IOException e) {
 			throw new NotAvailable("Database could not be copied to its temporary location");
 		} catch (Exception e) {

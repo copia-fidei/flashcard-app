@@ -9,27 +9,27 @@ import java.util.List;
 
 import static java.sql.DriverManager.getConnection;
 
-public class FlashcardsFromApkgDatabase implements RetrievedFlashcards {
+public class FlashcardsFromSqliteDatabase implements RetrievedFlashcards {
 
-	private final ExtractedSqliteDb extractedDatabase;
+	private final ApkgFileDb database;
 
-	public FlashcardsFromApkgDatabase(ExtractedSqliteDb extractedDatabase) {
-		this.extractedDatabase = extractedDatabase;
+	public FlashcardsFromSqliteDatabase(ApkgFileDb database) {
+		this.database = database;
 	}
 
 	@Override
 	public List<Flashcard> get() throws NotAvailable {
 		var flashcards = new ArrayList<Flashcard>();
 
-		final Path extractedDbPath;
+		final Path dbLocation;
 		try {
-			extractedDbPath = extractedDatabase.get();
-		} catch (ExtractedSqliteDb.NotAvailable e) {
+			dbLocation = database.tmpLocation();
+		} catch (ApkgFileDb.NotAvailable e) {
 			throw new NotAvailable(e);
 		}
 
-		final var url   = "jdbc:sqlite:" + extractedDbPath;
-		final var query = "SELECT notes.flds FROM notes";
+		var url   = "jdbc:sqlite:" + dbLocation;
+		var query = "SELECT notes.flds FROM notes";
 
 		try (var connection = getConnection(url);
 			 var statement = connection.createStatement();
@@ -47,7 +47,7 @@ public class FlashcardsFromApkgDatabase implements RetrievedFlashcards {
 			throw new NotAvailable("Database could not be read." , e);
 		}
 		try {
-			Files.delete(extractedDbPath);
+			Files.delete(dbLocation);
 		} catch (IOException ignored) {}
 
 

@@ -8,9 +8,11 @@ import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static java.util.logging.Logger.getLogger;
+
 public class CollectionsFromDb implements CollectionsSource {
 
-    private static final Logger LOG = Logger.getLogger(CollectionsFromDb.class.getName());
+    private static final Logger LOG = getLogger(CollectionsFromDb.class.getName());
 
 	private final Db database;
 

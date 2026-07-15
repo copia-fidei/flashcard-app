@@ -3,11 +3,11 @@ package flashcard.app.collections.entity;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class FileAlreadyExists implements AlreadyExists {
+public class FileCollectionAlreadyExists implements CollectionAlreadyExists {
 
 	private final Path directory;
 
-	public FileAlreadyExists(final Path directory) {
+	public FileCollectionAlreadyExists(final Path directory) {
 		this.directory = directory;
 	}
 

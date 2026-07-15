@@ -4,16 +4,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
-public class Css {
-	private static final Logger LOG = Logger.getLogger(Css.class.getName());
+import static java.util.logging.Logger.getLogger;
+
+public class Shared {
+	private static final Logger LOG = getLogger(Shared.class.getName());
 
 	private static final String LOCATION = "/styles.css";
 
-	public static final String SHARED = init();
+	public static final String CSS = init();
 
 	private static String init() {
 		String css = "";
-		try (InputStream is = Css.class.getResourceAsStream(LOCATION)) {
+		try (InputStream is = Shared.class.getResourceAsStream(LOCATION)) {
 			if (is != null)
 				css = new String(is.readAllBytes());
 			else

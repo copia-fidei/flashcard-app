@@ -21,14 +21,12 @@ public class PostgresqlDbFromKaraf implements Db {
 
 	@Override
 	public Connection open() throws SQLException {
-		DataSource dataSource;
+		final String name = "osgi:service/collections";
 		try {
-			InitialContext ctx = new InitialContext();
-			dataSource = (DataSource) ctx.lookup("osgi:service/collections");
+			return ((DataSource) new InitialContext().lookup(name)).getConnection();
 		} catch (NamingException e) {
-			throw new SQLException("Failed to lookup DataSource 'osgi:service/collections'", e);
+			throw new SQLException("Failed to lookup DataSource '" + name + "'", e);
 		}
-		return dataSource.getConnection();
 	}
 
 	@Override

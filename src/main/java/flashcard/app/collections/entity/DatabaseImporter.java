@@ -24,18 +24,18 @@ public class DatabaseImporter implements Importer {
 
 	@Override
 	public Collection importCollection() throws CouldNotImport {
-		var retrievedFlashcards = new FlashcardsFromApkgDatabase(new ExtractedDbFromInputStream(inputStream));
+		var flashcardsFromSqliteDatabase = new FlashcardsFromSqliteDatabase(new DbFromInputStream(inputStream));
 
 		List<Flashcard> flashcards;
 		try {
-			flashcards = retrievedFlashcards.get();
+			flashcards = flashcardsFromSqliteDatabase.get();
 		} catch (RetrievedFlashcards.NotAvailable e) {
 			throw CouldNotImport.Collection(fileName, e);
 		}
-		final var collection = new CollectionFromDatabase(database, fileName, flashcards);
-
-		final var insertCollectionSQL = "INSERT INTO collections (name) VALUES (?)";
-		final var insertFlashcardsSQL = "INSERT INTO flashcards (collection, front, back) VALUES (?, ?, ?)";
+		var collection = new CollectionFromDatabase(database, fileName, flashcards);
+		
+		var insertCollectionSQL = "INSERT INTO collections (name) VALUES (?)";
+		var insertFlashcardsSQL = "INSERT INTO flashcards (collection, front, back) VALUES (?, ?, ?)";
 
 		try (var connection = database.open()) {
 			connection.setAutoCommit(false);

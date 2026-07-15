@@ -10,7 +10,7 @@ import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class FlashcardsFromApkgDatabaseTest {
+class FlashcardsFromSqliteDatabaseTest {
 
 	@Test
 	void flashcards_are_available() {
@@ -22,6 +22,6 @@ class FlashcardsFromApkgDatabaseTest {
 			fail(e);
 			return;
 		}
-		assertDoesNotThrow(() -> new FlashcardsFromApkgDatabase(new ExtractedDbFromPath(apkgFile)).get());
+		assertDoesNotThrow(() -> new FlashcardsFromSqliteDatabase(new DbFromPath(apkgFile)).get());
 	}
 }

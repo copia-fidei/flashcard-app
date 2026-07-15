@@ -30,18 +30,19 @@ public class ClassloaderInfo {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String classloader() {
+		// looks ugly
 		final var classLoader   = getClass().getClassLoader();
 		final var pClassloader  = classLoader.getParent();
 		final var ppClassloader = pClassloader.getParent();
 		return "Class loader hierarchy, from this classloader to its parent (top to bottom):"
-				+ clInfo(classLoader)
+				+ getInfo(classLoader)
 				+ "-".repeat(100)
-				+ clInfo(pClassloader)
+				+ getInfo(pClassloader)
 				+ "-".repeat(100)
-				+ clInfo(ppClassloader);
+				+ getInfo(ppClassloader);
 	}
 
-	private String clInfo(ClassLoader cl) {
+	private String getInfo(ClassLoader cl) {
 		return format.format(new Object[] {
 				cl, cl.getClass(), vertical(", package", cl.getDefinedPackages()), urlsOf(cl)
 		});

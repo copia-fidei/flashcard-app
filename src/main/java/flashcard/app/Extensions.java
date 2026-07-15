@@ -15,9 +15,7 @@ public interface Extensions {
 	static boolean hasOneOf(Path path, String... extensions) {
 		// path.getFileName.toString prevents wrong results due to leading dots in relative paths, e.g. ./file.txt
 		// the toString is necessary!
-		final boolean result = stream(extensions).anyMatch(path.getFileName().toString()::endsWith);
-		//System.out.println(path + " " + result);
-		return result;
+		return stream(extensions).anyMatch(path.getFileName().toString()::endsWith);
 	}
 
 	static boolean hasNoneOf(String fileName, String... extensions) {
@@ -50,7 +48,11 @@ public interface Extensions {
 
 	// just an idea, might delete later
 	interface FileName {
-
+		boolean hasExtension(String extension);
+		boolean hasOneOf(String... extensions);
+		boolean hasNoneOf(String... extensions);
+		boolean hasExtension();
+		String getExtension();
 	}
 
 	record PathFileName(Path path) implements FileName {
@@ -59,6 +61,31 @@ public interface Extensions {
 		public String toString() {
 			return path.getFileName().toString();
 		}
+
+		@Override
+		public boolean hasExtension(final String extension) {
+			return false;
+		}
+
+		@Override
+		public boolean hasOneOf(final String... extensions) {
+			return false;
+		}
+
+		@Override
+		public boolean hasNoneOf(final String... extensions) {
+			return false;
+		}
+
+		@Override
+		public boolean hasExtension() {
+			return false;
+		}
+
+		@Override
+		public String getExtension() {
+			return "";
+		}
 	}
 
 	record StringFileName(String fileName) implements FileName {
@@ -66,6 +93,31 @@ public interface Extensions {
 		@Override
 		public String toString() {
 			return fileName;
+		}
+
+		@Override
+		public boolean hasExtension(final String extension) {
+			return false;
+		}
+
+		@Override
+		public boolean hasOneOf(final String... extensions) {
+			return false;
+		}
+
+		@Override
+		public boolean hasNoneOf(final String... extensions) {
+			return false;
+		}
+
+		@Override
+		public boolean hasExtension() {
+			return false;
+		}
+
+		@Override
+		public String getExtension() {
+			return "";
 		}
 	}
 

@@ -5,14 +5,17 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static java.lang.String.format;
+import static java.util.logging.Logger.getLogger;
+
 public interface Collection {
-	
-	Logger LOG = Logger.getLogger(Collection.class.getName());
+
+	Logger LOG = getLogger(Collection.class.getName());
 
 	String Name();
 
 	/**
-	 * @return	the name encoded in ASCII format for urls.
+	 * @return    the name encoded in ASCII format for URLs.
 	 */
 	default String EncodedName() {
 		try {
@@ -28,21 +31,28 @@ public interface Collection {
 	void delete() throws CouldNotBeDeleted;
 
 	class CouldNotBeDeleted extends Exception {
+		
+		private static final String MESSAGE                  = "Collection %s could not be deleted";
+		private static final String REASON_IT_DOES_NOT_EXIST = "it does not exist";
+
+		private static String MessageWithReason(String collectionName, String reason) {
+			return format(MESSAGE, collectionName) + " because " + reason;
+		}
 
 		public CouldNotBeDeleted(final String message) {
 			super(message);
 		}
 
 		public static CouldNotBeDeleted name(String collectionName, Throwable t) {
-			return new CouldNotBeDeleted("Collection " + collectionName + " could not be deleted", t);
+			return new CouldNotBeDeleted(format(MESSAGE, collectionName), t);
 		}
 
 		public static CouldNotBeDeleted becauseItDoesNotExist(String collectionName) {
-			return new CouldNotBeDeleted("Collection " + collectionName + " could not be deleted because it does not exist");
+			return new CouldNotBeDeleted(MessageWithReason(collectionName, REASON_IT_DOES_NOT_EXIST));
 		}
 
 		public static CouldNotBeDeleted becauseItDoesNotExist(String collectionName, Throwable throwable) {
-			return new CouldNotBeDeleted("Collection " + collectionName + " could not be deleted because it does not exist", throwable);
+			return new CouldNotBeDeleted(MessageWithReason(collectionName, REASON_IT_DOES_NOT_EXIST), throwable);
 		}
 
 		public CouldNotBeDeleted(final Throwable cause) {

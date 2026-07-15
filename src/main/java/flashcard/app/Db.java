@@ -10,7 +10,7 @@ public interface Db {
 	record SimpleConnection(Db db) {
 
 		public void execute(String sql) throws SQLException {
-			try (var connection = db.open(); final var statement = connection.createStatement()) {
+			try (var connection = db.open(); var statement = connection.createStatement()) {
 				statement.execute(sql);
 			}
 		}

@@ -5,7 +5,7 @@ import flashcard.app.ThrowingSupplier;
 import java.util.List;
 
 /**
- * Retrieves flashcards from file, database, network etc.
+ * Flashcards from file, database, network etc.
  */
 public interface RetrievedFlashcards extends ThrowingSupplier<List<Flashcard>, RetrievedFlashcards.NotAvailable> {
 

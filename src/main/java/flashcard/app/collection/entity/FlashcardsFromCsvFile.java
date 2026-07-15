@@ -11,7 +11,7 @@ public class FlashcardsFromCsvFile implements RetrievedFlashcards {
 	@Override
 	public List<Flashcard> get() {
 		return csvContent.lines().map(line -> {
-			final String[] split = line.split(",");
+			String[] split = line.split(",");
 			return new Flashcard(split[0], split[1]);
 		}).toList();
 	}

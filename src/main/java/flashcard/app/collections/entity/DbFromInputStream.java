@@ -1,7 +1,7 @@
 package flashcard.app.collections.entity;
 
-import flashcard.app.collection.entity.ExtractedSqliteDb;
-import flashcard.app.collection.entity.TemporaryDatabaseLocation;
+import flashcard.app.collection.entity.ApkgFileDb;
+import flashcard.app.collection.entity.TempDbLocation;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,16 +10,16 @@ import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class ExtractedDbFromInputStream implements ExtractedSqliteDb {
+public class DbFromInputStream implements ApkgFileDb {
 
 	private final InputStream inputStream;
 
-	public ExtractedDbFromInputStream(final InputStream inputStream) {
+	public DbFromInputStream(final InputStream inputStream) {
 		this.inputStream = inputStream;
 	}
 
 	@Override
-	public Path get() throws NotAvailable {
+	public Path tmpLocation() throws NotAvailable {
 		String databaseName = "";
 		byte[] database     = new byte[0];
 		try (var zipInputStream = new ZipInputStream(inputStream)) {
@@ -40,10 +40,10 @@ public class ExtractedDbFromInputStream implements ExtractedSqliteDb {
 		}
 
 		try {
-			return Files.write(new TemporaryDatabaseLocation(databaseName).path(), database);
+			return Files.write(new TempDbLocation(databaseName).path(), database);
 		} catch (IOException e) {
 			throw new NotAvailable("Database could not be copied to a temporary location", e);
-		} catch (TemporaryDatabaseLocation.NotAvailable e) {
+		} catch (TempDbLocation.NotAvailable e) {
 			throw new NotAvailable(e);
 		}
 	}

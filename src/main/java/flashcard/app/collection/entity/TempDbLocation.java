@@ -8,16 +8,16 @@ import java.nio.file.Path;
 import static java.nio.file.Files.createTempDirectory;
 import static java.nio.file.Files.createTempFile;
 
-public class TemporaryDatabaseLocation {
+public class TempDbLocation {
 
 	private final String extension;
 
 	// two primary constructors unfortunately
-	public TemporaryDatabaseLocation(final String fileNameWithExtension) {
+	public TempDbLocation(final String fileNameWithExtension) {
 		this.extension = Extensions.getExtension(fileNameWithExtension);
 	}
 
-	TemporaryDatabaseLocation(final Path pathWithExtension) {
+	TempDbLocation(final Path pathWithExtension) {
 		this.extension = Extensions.getExtension(pathWithExtension);
 	}
 

@@ -4,11 +4,11 @@ import flashcard.app.Db;
 
 import java.sql.*;
 
-public class AlreadyExistsInDatabase implements AlreadyExists {
+public class CollectionAlreadyExistsInDatabase implements CollectionAlreadyExists {
 
 	private final Db database;
 
-	public AlreadyExistsInDatabase(final Db database) {
+	public CollectionAlreadyExistsInDatabase(final Db database) {
 		this.database = database;
 	}
 

@@ -9,6 +9,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.Map;
 
+import static java.util.Map.of;
+
 @Path("result")
 public class ResultResource {
 
@@ -16,6 +18,6 @@ public class ResultResource {
 	@Produces(MediaType.TEXT_HTML)
 	@Template(name = "/result.mustache")
 	public Map<String, String> show(@QueryParam("title") String title, @QueryParam("description") String description) {
-		return Map.of("title", title, "description", description);
+		return of("title", title, "description", description);
 	}
 }

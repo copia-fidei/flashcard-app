@@ -3,6 +3,7 @@ package flashcard.app.collection.entity;
 import java.util.Objects;
 
 import static java.util.Comparator.comparing;
+import static java.util.Objects.hash;
 
 public class Flashcard implements Comparable<Flashcard> {
 
@@ -36,7 +37,7 @@ public class Flashcard implements Comparable<Flashcard> {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(front, back);
+		return hash(front, back);
 	}
 
 	@Override

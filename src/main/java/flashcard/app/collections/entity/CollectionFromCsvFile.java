@@ -10,9 +10,12 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static java.nio.file.Files.readString;
+import static java.util.logging.Logger.getLogger;
+
 public class CollectionFromCsvFile implements CollectionsSource {
 
-	private static final Logger LOG = Logger.getLogger(CollectionFromCsvFile.class.getName());
+	private static final Logger LOG = getLogger(CollectionFromCsvFile.class.getName());
 
 	private final Path csvFile;
 
@@ -24,7 +27,7 @@ public class CollectionFromCsvFile implements CollectionsSource {
 	public List<Collection> get() {
 		final String csvContent;
 		try {
-			csvContent = Files.readString(csvFile);
+			csvContent = readString(csvFile);
 		} catch (IOException e) {
 			LOG.warning("CSV file " + csvFile + " could not be read: " + e.getMessage());
 

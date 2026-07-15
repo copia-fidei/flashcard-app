@@ -1,11 +1,11 @@
 package flashcard.app.collections.boundary;
 
-import flashcard.app.Css;
+import flashcard.app.Db;
 import flashcard.app.Extensions;
 import flashcard.app.PostgresqlDbFromKaraf;
 import flashcard.app.collection.entity.Collection;
 import flashcard.app.collections.entity.*;
-import flashcard.app.result.boundary.ResultRedirect;
+import flashcard.app.result.boundary.RedirectToResultPage;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.server.mvc.Template;
@@ -18,10 +18,13 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import static flashcard.app.Shared.CSS;
+import static java.util.Map.of;
+
 @Path("collections")
 public class CollectionsResource {
 
-	private static final PostgresqlDbFromKaraf DATABASE = new PostgresqlDbFromKaraf();
+	private static final Db DATABASE = new PostgresqlDbFromKaraf();
 
 	@Inject
     private Collections collections;
@@ -38,14 +41,14 @@ public class CollectionsResource {
 		if (Extensions.hasNoneOf(fileName, ".csv", ".apkg")) {
 			return redirectToErrorPage("File type is not supported");
 		}
-		AlreadyExists check = new AlreadyExistsInDatabase(DATABASE);
+		var check = new CollectionAlreadyExistsInDatabase(DATABASE);
 		// If you want check if the file was saved on the server instead:
-		//AlreadyExists check = new FileAlreadyExists(COLLECTIONS_DIR);
+		//CollectionAlreadyExists check = new FileCollectionAlreadyExists(COLLECTIONS_DIR);
 		try {
 			if (check.alreadyExists(fileName)) {
 				return redirectToErrorPage("Collection " + fileName + " already exists");
 			}
-		} catch (AlreadyExists.CouldNotBeDetermined e) {
+		} catch (CollectionAlreadyExists.CouldNotBeDetermined e) {
 			return redirectToErrorPage(e.getMessage());
 		}
 
@@ -58,15 +61,15 @@ public class CollectionsResource {
 			return redirectToErrorPage(e.getMessage());
 		}
 		collections.List().add(newCollection);
-		return redirectToSuccesPage(newCollection);
+		return redirectToSuccessPage(newCollection);
 	}
 
 	private static Response redirectToErrorPage(final String message) {
-		return ResultRedirect.toResultPage("Import failed", message);
+		return new RedirectToResultPage("Import failed", message).direct();
 	}
 
-	private static Response redirectToSuccesPage(final Collection collection) {
-		return ResultRedirect.toResultPage("Import successful", "Collection " + collection.Name() + " has been imported successfully.");
+	private static Response redirectToSuccessPage(final Collection collection) {
+		return new RedirectToResultPage("Import successful", "Collection " + collection.Name() + " has been imported successfully.").direct();
 	}
 
 	@GET
@@ -74,16 +77,15 @@ public class CollectionsResource {
 	@Template(name = "/collections.mustache")
 	public Map<String, Object> listCollections() {
 		// Needed workaround because otherwise the property EncodedName is not read by mustache.
-		final List<Map<String, String>> collectionsAsMap = collections.List().stream()
-				.map(collection -> Map.of(
-						"Name", collection.Name(),
+		List<Map<String, String>> collectionsAsMap = collections.List().stream()
+				.map(collection -> of(
+						"Name", 	   collection.Name(),
 						"EncodedName", collection.EncodedName()
 				))
 				.toList();
 
-		return Map.of(
-				"stylesheet", Css.SHARED,
-				"collections", collectionsAsMap);
+		return of("stylesheet", CSS,
+				  "collections", collectionsAsMap);
 	}
 
 

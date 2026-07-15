@@ -12,9 +12,9 @@ record TableRow(int index, String front, String back) {
 		this(index, card.Front(), card.Back());
 	}
 
-	static List<TableRow> getRows(final Collection collection) {
-		final var flashcards = collection.Flashcards();
-		final var rows = new ArrayList<TableRow>();
+	static List<TableRow> getRows(Collection collection) {
+		var flashcards = collection.Flashcards();
+		var rows = new ArrayList<TableRow>();
 		for (int i = 0; i < flashcards.size(); i++) {
 			rows.add(new TableRow(i, flashcards.get(i)));
 		}
