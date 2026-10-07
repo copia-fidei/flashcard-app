@@ -4,4 +4,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'flashcards'
+rootProject.name = 'flashcard-app'

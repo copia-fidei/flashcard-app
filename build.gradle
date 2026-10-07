@@ -9,7 +9,7 @@ def karafDeployPath = file(System.env.HOME + "/.local/bin/apache-karaf-4.4.8/dep
 
 java.sourceCompatibility = JavaVersion.VERSION_21
 
-group = 'web.flashcards'
+group = 'com.epau.app'
 version = '1.0-SNAPSHOT'
 
 repositories {
@@ -89,7 +89,7 @@ Web-ContextPath: /flashcards
 //-includeresource: src/main/resources
 -wab: src/main/webapp
 '''
-        archiveBaseName = 'flashcards'
+        archiveBaseName = 'flashcard-app'
         archiveAppendix = ''
         archiveClassifier = ''
         archiveVersion = ''

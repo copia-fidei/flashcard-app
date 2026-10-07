@@ -3,7 +3,7 @@ package flashcard.app.collection.entity;
 import java.nio.file.Path;
 
 /**
- * The sqlite database from an APKG file, which is a sqlite database.
+ * The sqlite database from an APKG file.
  */
 public interface ApkgFileDb {
 

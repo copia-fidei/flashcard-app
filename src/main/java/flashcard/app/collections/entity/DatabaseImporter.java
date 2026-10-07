@@ -16,6 +16,9 @@ public class DatabaseImporter implements Importer {
 	private final String      fileName;
 	private final InputStream inputStream;
 
+	private static final String INSERT_COLLECTION_SQL = "INSERT INTO collections (name) VALUES (?)";
+	private static final String INSERT_FLASHCARDS_SQL = "INSERT INTO flashcards (collection, front, back) VALUES (?, ?, ?)";
+
 	public DatabaseImporter(final Db database, final String fileName, final InputStream inputStream) {
 		this.database = database;
 		this.inputStream = inputStream;
@@ -33,14 +36,11 @@ public class DatabaseImporter implements Importer {
 			throw CouldNotImport.Collection(fileName, e);
 		}
 		var collection = new CollectionFromDatabase(database, fileName, flashcards);
-		
-		var insertCollectionSQL = "INSERT INTO collections (name) VALUES (?)";
-		var insertFlashcardsSQL = "INSERT INTO flashcards (collection, front, back) VALUES (?, ?, ?)";
 
 		try (var connection = database.open()) {
 			connection.setAutoCommit(false);
-			try (var insertCollectionStmt = connection.prepareStatement(insertCollectionSQL);
-				 var insertFlashcardsStmt = connection.prepareStatement(insertFlashcardsSQL)) {
+			try (var insertCollectionStmt = connection.prepareStatement(INSERT_COLLECTION_SQL);
+				 var insertFlashcardsStmt = connection.prepareStatement(INSERT_FLASHCARDS_SQL)) {
 
 				insertCollectionStmt.setString(1, fileName);
 				insertCollectionStmt.executeUpdate();

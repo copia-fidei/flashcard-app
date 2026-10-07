@@ -7,7 +7,7 @@ Supported file formats that can be imported:
 - APKG (file format from the flashcards application Anki)
 
 Used technologies:
-- OSGi: application is comprised of OSGi bundles
+- OSGi: application comprises OSGi bundles
 - Gradle + bnd: build an OSGi application bundle
 - Karaf application server (Version 4.4.8): where the application runs
 - REST-API (JAX-RS with the Jersey implementation): serves websites
