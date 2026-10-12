@@ -2,83 +2,44 @@ import aQute.bnd.gradle.Bundle
 
 plugins {
     id 'java'
-    id "biz.aQute.bnd.builder"
+    id 'biz.aQute.bnd.builder'
 }
 
-def karafDeployPath = file(System.env.HOME + "/.local/bin/apache-karaf-4.4.8/deploy")
 
 java.sourceCompatibility = JavaVersion.VERSION_21
 
 group = 'com.epau.app'
-version = '1.0-SNAPSHOT'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
 }
 
-configurations {
-    warlib {
-        transitive = false
-    }
-    bundleDep {
-        transitive = false
-    }
-}
-
-
-tasks.register('downloadWarLibs', Copy) {
-    from configurations.warlib
-    into 'build/libs'
-    duplicatesStrategy 'exclude'
-}
-
-tasks.register('deployBundleDependenciesIntoKaraf', Copy) {
-    from configurations.bundleDep
-    into karafDeployPath
-    duplicatesStrategy 'exclude'
-}
-
 dependencies {
-    // TODO need scope for compile + bundleDep
     compileOnly 'javax.servlet:javax.servlet-api:3.0.1'
     compileOnly 'org.glassfish.jersey.media:jersey-media-multipart:2.47'
-    compileOnly 'jakarta.json:jakarta.json-api:2.1.3'
+    compileOnly 'org.glassfish.jersey.ext:jersey-mvc-mustache:2.47'
 
-    compileOnly 'org.osgi:org.osgi.service.component.annotations:1.4.0'
+    //compileOnly 'org.osgi:org.osgi.service.component.annotations:1.4.0'
 
-
-    implementation 'org.glassfish.jersey.ext:jersey-mvc-mustache:2.47'
-    // what is the correct scope?
-    bundleDep 'org.glassfish.jersey.ext:jersey-mvc-mustache:2.47'
-    bundleDep 'com.github.spullara.mustache.java:compiler:0.9.14'
-    // TODO why implementation scope?
-    implementation 'org.glassfish.jersey.containers:jersey-container-servlet-core:2.47'
-
-    implementation 'org.xerial:sqlite-jdbc:3.45.2.0'
-    //bundleDep'org.xerial:sqlite-jdbc:3.51.0.0'
-
-
-    bundleDep 'org.glassfish.jersey.ext:jersey-mvc:2.47'
-    bundleDep 'org.glassfish.jersey.media:jersey-media-multipart:2.47'
-    bundleDep 'javax.validation:validation-api:2.0.1.Final'
-    bundleDep 'org.jvnet.mimepull:mimepull:1.9.11'
-
+    // Test
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.postgresql:postgresql:42.7.8'
-
+    testRuntimeOnly 'org.xerial:sqlite-jdbc:3.45.2.0'
+    testRuntimeOnly 'org.postgresql:postgresql:42.7.14'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-// Include this, otherwise you get this warning:     [enum]  This API is incompatible with the configuration cache, which will become the only mode supported by Gradle in a future release.
-tasks.named("jar") {
+// Include this, otherwise you get this warning:
+// [enum]  This API is incompatible with the configuration cache, which will become the only mode supported by Gradle in a future release.
+tasks.named('jar') {
     bundle {
         properties.empty
     }
 }
-tasks.register("bundle", Bundle) {
-    dependsOn('deployBundleDependenciesIntoKaraf', 'downloadWarLibs')
 
+
+tasks.register('bundle', Bundle) {
     from sourceSets.main.output
     bundle {
         bnd '''
@@ -89,14 +50,18 @@ Web-ContextPath: /flashcards
 //-includeresource: src/main/resources
 -wab: src/main/webapp
 '''
-        archiveBaseName = 'flashcard-app'
-        archiveAppendix = ''
-        archiveClassifier = ''
-        archiveVersion = ''
-        destinationDirectory = karafDeployPath
-
         outputs.upToDateWhen { false }
     }
+}
+
+tasks.register('deploy_to_Karaf', Copy) {
+    // Change this to the /deploy folder of your Karaf.
+    def deployPath = file(System.env.HOME + '/.local/bin/apache-karaf-4.4.8/deploy')
+    group = 'Deploy'
+    def bundleTask = tasks.named('bundle')
+    dependsOn(bundleTask)
+    from(bundleTask)
+    into(deployPath)
 }
 
 test {

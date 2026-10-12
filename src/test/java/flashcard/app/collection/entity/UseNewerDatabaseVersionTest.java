@@ -7,42 +7,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static flashcard.app.Extensions.hasExtension;
+import static java.nio.file.Path.of;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * APKG files contain a SQL lite database.
+ * The older version is .anki2 and the newer version is .anki21.
+ * We test that sorting comparator works.
+ */
 class UseNewerDatabaseVersionTest {
 
-	public static final String NEW_VERSION = ".anki21";
+	private static final String NEW_VERSION = ".anki21";
 
 	@Test
 	void given_the_old_and_the_newer_database_version_the_new_version_is_selected() {
-		final Path new1 = Path.of("file.anki21");
-		final Path old1 = Path.of("file.anki2");
+		Path new1 = of("file.anki21");
+		Path old1 = of("file.anki2");
 
-		final var unsortedList = new ArrayList<>(List.of(new1, old1));
-		unsortedList.sort(new UseNewerDatabaseVersion());
+		var list = new ArrayList<Path>();
+		list.add(new1);
+		list.add(old1);
 
-		assertEquals(new1, unsortedList.getFirst());
+		list.sort(new UseNewerDatabaseVersion());
+
+		assertEquals(new1, list.getFirst());
 	}
 
 	@Test
-	void all_newer_databases_become_the_first_entries_after_sorting() {
-		final Path other1 = Path.of("other");
-		final Path new1   = Path.of("file.anki21");
-		final Path old1   = Path.of("file.anki2");
-		final Path new2   = Path.of("file2.anki21");
-		final Path other2 = Path.of("other2");
-		final Path old2   = Path.of("file2.anki2");
-		final Path new3   = Path.of("file3.anki21");
+	void newer_database_versions_are_sorted_first() {
+		var versions = new ArrayList<>(List.of(
+			of("other"),
+			of("file.anki21"),
+			of("file.anki2"),
+			of("file2.anki21"),
+			of("other2"),
+			of("file2.anki2"),
+			of("file3.anki21")
+		));
+		long amountOfNewVersions = versions.stream().filter(e -> hasExtension(e, NEW_VERSION)).count();
 
-		final var unsortedList = new ArrayList<>(List.of(other1, new1, old1, new2, other2, old2, new3));
-		final long amountOfNewerDatabases =
-				unsortedList.stream().filter(e -> hasExtension(e, NEW_VERSION)).count();
+		versions.sort(new UseNewerDatabaseVersion());
 
-		unsortedList.sort(new UseNewerDatabaseVersion());
-
-		System.out.println("Sorted list: " + unsortedList);
-		for (int i = 0; i < amountOfNewerDatabases; i++) {
-			assertTrue(hasExtension(unsortedList.get(i), NEW_VERSION));
+		System.out.println("Sorted versions: " + versions);
+		for (int i = 0; i < amountOfNewVersions; i++) {
+			assertTrue(hasExtension(versions.get(i), NEW_VERSION));
 		}
 	}
 }
