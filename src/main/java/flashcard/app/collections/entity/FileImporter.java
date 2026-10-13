@@ -35,7 +35,7 @@ public class FileImporter implements Importer {
 			String extension = getExtension(fileName);
 			var flashcards = switch (extension) {
 				case ".csv"  -> new FlashcardsFromCsvFile(new String(fileContent));
-				case ".apkg" -> new FlashcardsFromSqliteDatabase(new DbFromPath(fileOnServer));
+				case ".apkg" -> new FlashcardsFromSqliteDatabase(new SqliteDbFromPath(fileOnServer));
 
 				default -> throw new CouldNotImport("Unsupported file format: " + extension);
 			};

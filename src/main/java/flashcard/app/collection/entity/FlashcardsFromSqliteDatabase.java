@@ -11,9 +11,9 @@ import static java.sql.DriverManager.getConnection;
 
 public class FlashcardsFromSqliteDatabase implements RetrievedFlashcards {
 
-	private final ApkgFileDb database;
+	private final ApkgFileSqliteDb database;
 
-	public FlashcardsFromSqliteDatabase(ApkgFileDb database) {
+	public FlashcardsFromSqliteDatabase(ApkgFileSqliteDb database) {
 		this.database = database;
 	}
 
@@ -24,7 +24,7 @@ public class FlashcardsFromSqliteDatabase implements RetrievedFlashcards {
 		final Path dbLocation;
 		try {
 			dbLocation = database.tmpLocation();
-		} catch (ApkgFileDb.NotAvailable e) {
+		} catch (ApkgFileSqliteDb.NotAvailable e) {
 			throw new NotAvailable(e);
 		}
 

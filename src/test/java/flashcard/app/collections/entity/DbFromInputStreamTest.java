@@ -9,7 +9,7 @@ class DbFromInputStreamTest {
 
 	@Test
 	void extracted_database_is_available() {
-		assertDoesNotThrow(() -> new DbFromInputStream(new ExampleApkgFile().getInputStream()).tmpLocation());
+		assertDoesNotThrow(() -> new SqliteDbFromInputStream(new ExampleApkgFile().getInputStream()).tmpLocation());
 	}
 
 }

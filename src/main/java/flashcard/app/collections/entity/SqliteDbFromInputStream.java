@@ -1,6 +1,6 @@
 package flashcard.app.collections.entity;
 
-import flashcard.app.collection.entity.ApkgFileDb;
+import flashcard.app.collection.entity.ApkgFileSqliteDb;
 import flashcard.app.collection.entity.TempDbLocation;
 
 import java.io.IOException;
@@ -10,11 +10,11 @@ import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class DbFromInputStream implements ApkgFileDb {
+public class SqliteDbFromInputStream implements ApkgFileSqliteDb {
 
 	private final InputStream inputStream;
 
-	public DbFromInputStream(final InputStream inputStream) {
+	public SqliteDbFromInputStream(final InputStream inputStream) {
 		this.inputStream = inputStream;
 	}
 

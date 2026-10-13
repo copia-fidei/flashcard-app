@@ -23,7 +23,7 @@ public class CollectionFromApkgFile implements CollectionsSource {
 	public List<Collection> get() {
 		List<Flashcard> flashcards;
 		try {
-			flashcards = new FlashcardsFromSqliteDatabase(new DbFromPath(apkgFile)).get();
+			flashcards = new FlashcardsFromSqliteDatabase(new SqliteDbFromPath(apkgFile)).get();
 		} catch (RetrievedFlashcards.NotAvailable e) {
 			LOG.warning("Flashcards could not be retrieved. Collection at " + apkgFile + " will not be added.");
 

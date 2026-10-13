@@ -13,11 +13,11 @@ import static java.nio.file.FileSystems.newFileSystem;
 import static java.nio.file.Files.*;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-public class DbFromPath implements ApkgFileDb {
+public class SqliteDbFromPath implements ApkgFileSqliteDb {
 
 	private final Path apkgFile;
 
-	public DbFromPath(final Path apkgFile) { this.apkgFile = apkgFile; }
+	public SqliteDbFromPath(final Path apkgFile) { this.apkgFile = apkgFile; }
 
 	@Override
 	public Path tmpLocation() throws NotAvailable {

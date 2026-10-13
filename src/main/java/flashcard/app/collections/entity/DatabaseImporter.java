@@ -27,7 +27,7 @@ public class DatabaseImporter implements Importer {
 
 	@Override
 	public Collection importCollection() throws CouldNotImport {
-		var flashcardsFromSqliteDatabase = new FlashcardsFromSqliteDatabase(new DbFromInputStream(inputStream));
+		var flashcardsFromSqliteDatabase = new FlashcardsFromSqliteDatabase(new SqliteDbFromInputStream(inputStream));
 
 		List<Flashcard> flashcards;
 		try {

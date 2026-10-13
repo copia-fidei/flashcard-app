@@ -5,13 +5,10 @@ import java.nio.file.Path;
 /**
  * The sqlite database from an APKG file.
  */
-public interface ApkgFileDb {
+public interface ApkgFileSqliteDb {
 
 	/**
-	 * The temporary location of the extracted database.
-	 * The extracted database is a temporary file and should be deleted after use.
-	 *
-	 * @return	the temporary location of the extracted database, delete after use.
+	 * @return	a temporary location of the extracted sqlite database, delete after use.
 	 */
 	Path tmpLocation() throws NotAvailable;
 
