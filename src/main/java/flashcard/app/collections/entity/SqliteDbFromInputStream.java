@@ -14,7 +14,7 @@ public class SqliteDbFromInputStream implements ApkgFileSqliteDb {
 
 	private final InputStream inputStream;
 
-	public SqliteDbFromInputStream(final InputStream inputStream) {
+	public SqliteDbFromInputStream(InputStream inputStream) {
 		this.inputStream = inputStream;
 	}
 

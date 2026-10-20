@@ -8,7 +8,7 @@ public class CollectionAlreadyExistsInDatabase implements CollectionAlreadyExist
 
 	private final Db database;
 
-	public CollectionAlreadyExistsInDatabase(final Db database) {
+	public CollectionAlreadyExistsInDatabase(Db database) {
 		this.database = database;
 	}
 

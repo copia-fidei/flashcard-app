@@ -17,7 +17,7 @@ public class SqliteDbFromPath implements ApkgFileSqliteDb {
 
 	private final Path apkgFile;
 
-	public SqliteDbFromPath(final Path apkgFile) { this.apkgFile = apkgFile; }
+	public SqliteDbFromPath(Path apkgFile) { this.apkgFile = apkgFile; }
 
 	@Override
 	public Path tmpLocation() throws NotAvailable {

@@ -16,7 +16,7 @@ public class CollectionsFromDb implements CollectionsSource {
 
 	private final Db database;
 
-	public CollectionsFromDb(final Db database) { this.database = database; }
+	public CollectionsFromDb(Db database) { this.database = database; }
 
 	@Override
     public List<Collection> get() {

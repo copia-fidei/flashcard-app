@@ -6,7 +6,7 @@ public interface CollectionAlreadyExists {
 
 	class CouldNotBeDetermined extends Exception {
 
-		public CouldNotBeDetermined(final Throwable t) {
+		public CouldNotBeDetermined(Throwable t) {
 			super(t);
 		}
 	}

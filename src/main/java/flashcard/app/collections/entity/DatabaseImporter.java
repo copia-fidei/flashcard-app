@@ -19,7 +19,7 @@ public class DatabaseImporter implements Importer {
 	private static final String INSERT_COLLECTION_SQL = "INSERT INTO collections (name) VALUES (?)";
 	private static final String INSERT_FLASHCARDS_SQL = "INSERT INTO flashcards (collection, front, back) VALUES (?, ?, ?)";
 
-	public DatabaseImporter(final Db database, final String fileName, final InputStream inputStream) {
+	public DatabaseImporter(Db database, String fileName, InputStream inputStream) {
 		this.database = database;
 		this.inputStream = inputStream;
 		this.fileName = fileName;

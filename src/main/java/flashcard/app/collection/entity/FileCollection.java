@@ -10,7 +10,7 @@ public class FileCollection extends CollectionInMemory {
 
 	private final Path filePath;
 
-	public FileCollection(final Path filePath, final List<Flashcard> flashcards) {
+	public FileCollection(Path filePath, List<Flashcard> flashcards) {
 		super(filePath.getFileName().toString(), flashcards);
 
 		this.filePath = filePath;

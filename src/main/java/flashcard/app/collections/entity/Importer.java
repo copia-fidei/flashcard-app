@@ -8,19 +8,19 @@ public interface Importer {
 
 	class CouldNotImport extends Exception {
 
-		public static CouldNotImport Collection(final String collectionName, final Throwable t) {
+		public static CouldNotImport Collection(String collectionName, Throwable t) {
 			return new CouldNotImport("Could not import " + collectionName, t);
 		}
 
-		public CouldNotImport(final Throwable t) {
+		public CouldNotImport(Throwable t) {
 			super(t);
 		}
 
-		public CouldNotImport(final String s, final Throwable t) {
+		public CouldNotImport(String s, Throwable t) {
 			super(s, t);
 		}
 
-		public CouldNotImport(final String s) {
+		public CouldNotImport(String s) {
 			super(s);
 		}
 	}

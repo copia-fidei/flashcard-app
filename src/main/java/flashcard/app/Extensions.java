@@ -63,17 +63,17 @@ public interface Extensions {
 		}
 
 		@Override
-		public boolean hasExtension(final String extension) {
+		public boolean hasExtension(String extension) {
 			return false;
 		}
 
 		@Override
-		public boolean hasOneOf(final String... extensions) {
+		public boolean hasOneOf(String... extensions) {
 			return false;
 		}
 
 		@Override
-		public boolean hasNoneOf(final String... extensions) {
+		public boolean hasNoneOf(String... extensions) {
 			return false;
 		}
 
@@ -96,17 +96,17 @@ public interface Extensions {
 		}
 
 		@Override
-		public boolean hasExtension(final String extension) {
+		public boolean hasExtension(String extension) {
 			return false;
 		}
 
 		@Override
-		public boolean hasOneOf(final String... extensions) {
+		public boolean hasOneOf(String... extensions) {
 			return false;
 		}
 
 		@Override
-		public boolean hasNoneOf(final String... extensions) {
+		public boolean hasNoneOf(String... extensions) {
 			return false;
 		}
 

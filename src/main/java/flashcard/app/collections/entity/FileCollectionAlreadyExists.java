@@ -7,7 +7,7 @@ public class FileCollectionAlreadyExists implements CollectionAlreadyExists {
 
 	private final Path directory;
 
-	public FileCollectionAlreadyExists(final Path directory) {
+	public FileCollectionAlreadyExists(Path directory) {
 		this.directory = directory;
 	}
 

@@ -9,11 +9,11 @@ public class CollectionInMemory implements Collection {
 	private final String          name;
 	private final List<Flashcard> flashcards = new ArrayList<>();
 
-	public CollectionInMemory(final String name) {
+	public CollectionInMemory(String name) {
 		this(name, List.of());
 	}
 
-	public CollectionInMemory(final String name, final List<Flashcard> flashcards) {
+	public CollectionInMemory(String name, List<Flashcard> flashcards) {
 		this.name = name;
 		this.flashcards.addAll(flashcards);
 	}
@@ -34,7 +34,7 @@ public class CollectionInMemory implements Collection {
 	}
 
 	@Override
-	public boolean equals(final Object o) {
+	public boolean equals(Object o) {
 		if (!(o instanceof final CollectionInMemory that)) return false;
 		return Objects.equals(name, that.name);
 	}

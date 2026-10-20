@@ -65,11 +65,11 @@ public class CollectionsResource {
 		return redirectToSuccessPage(newCollection);
 	}
 
-	private static Response redirectToErrorPage(final String message) {
+	private static Response redirectToErrorPage(String message) {
 		return new RedirectToResultPage("Import failed", message).direct();
 	}
 
-	private static Response redirectToSuccessPage(final Collection collection) {
+	private static Response redirectToSuccessPage(Collection collection) {
 		return new RedirectToResultPage("Import successful", "Collection " + collection.Name() + " has been imported successfully.").direct();
 	}
 

@@ -6,7 +6,7 @@ public class FlashcardsFromCsvFile implements RetrievedFlashcards {
 
 	private final String csvContent;
 
-	public FlashcardsFromCsvFile(final String csvContent) { this.csvContent = csvContent; }
+	public FlashcardsFromCsvFile(String csvContent) { this.csvContent = csvContent; }
 
 	@Override
 	public List<Flashcard> get() {

@@ -14,15 +14,15 @@ public interface ApkgFileSqliteDb {
 
 	class NotAvailable extends Exception {
 
-		public NotAvailable(final String s, final Throwable t) {
+		public NotAvailable(String s, final Throwable t) {
 			super(s, t);
 		}
 
-		public NotAvailable(final String s) {
+		public NotAvailable(String s) {
 			super(s);
 		}
 
-		public NotAvailable(final Throwable t) {
+		public NotAvailable(Throwable t) {
 			super(t);
 		}
 	}

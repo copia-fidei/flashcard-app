@@ -13,11 +13,11 @@ public class TempDbLocation {
 	private final String extension;
 
 	// two primary constructors unfortunately
-	public TempDbLocation(final String fileNameWithExtension) {
+	public TempDbLocation(String fileNameWithExtension) {
 		this.extension = Extensions.getExtension(fileNameWithExtension);
 	}
 
-	TempDbLocation(final Path pathWithExtension) {
+	TempDbLocation(Path pathWithExtension) {
 		this.extension = Extensions.getExtension(pathWithExtension);
 	}
 
@@ -31,7 +31,7 @@ public class TempDbLocation {
 
 	public static class NotAvailable extends Exception {
 
-		public NotAvailable(final String s, final Throwable t) {
+		public NotAvailable(String s, Throwable t) {
 			super(s, t);
 		}
 	}

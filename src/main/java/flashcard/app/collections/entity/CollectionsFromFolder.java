@@ -28,7 +28,7 @@ public class CollectionsFromFolder implements CollectionsSource {
 		this(Configuration.COLLECTIONS_DIR);
 	}
 
-	public CollectionsFromFolder(final Path collectionsDir) {
+	public CollectionsFromFolder(Path collectionsDir) {
 		this.collectionsDir = collectionsDir;
 	}
 

@@ -17,7 +17,7 @@ public interface RetrievedFlashcards extends ThrowingSupplier<List<Flashcard>, R
 
 		public NotAvailable(String message) { super(message); }
 
-		public NotAvailable(final Throwable t) {
+		public NotAvailable(Throwable t) {
 			super(t);
 		}
 	}

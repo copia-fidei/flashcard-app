@@ -10,9 +10,9 @@ public class Flashcard implements Comparable<Flashcard> {
 	private final String front;
 	private final String back;
 
-	public Flashcard(final String front, final String back) {
+	public Flashcard(String front, String back) {
 		this.front = front;
-		this.back = back;
+		this.back  = back;
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class Flashcard implements Comparable<Flashcard> {
 	}
 
 	@Override
-	public boolean equals(final Object o) {
+	public boolean equals(Object o) {
 		if (!(o instanceof final Flashcard flashcard)) return false;
 		return Objects.equals(front, flashcard.front) && Objects.equals(back, flashcard.back);
 	}
@@ -46,7 +46,7 @@ public class Flashcard implements Comparable<Flashcard> {
 	}
 
 	@Override
-	public int compareTo(final Flashcard o) {
+	public int compareTo(Flashcard o) {
 		return comparing(Flashcard::Front).thenComparing(Flashcard::Back).compare(this, o);
 	}
 }

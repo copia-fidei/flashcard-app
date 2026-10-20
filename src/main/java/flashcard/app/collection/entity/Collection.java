@@ -31,7 +31,7 @@ public interface Collection {
 	void delete() throws CouldNotBeDeleted;
 
 	class CouldNotBeDeleted extends Exception {
-		
+
 		private static final String MESSAGE                  = "Collection %s could not be deleted";
 		private static final String REASON_IT_DOES_NOT_EXIST = "it does not exist";
 
@@ -39,7 +39,7 @@ public interface Collection {
 			return format(MESSAGE, collectionName) + " because " + reason;
 		}
 
-		public CouldNotBeDeleted(final String message) {
+		public CouldNotBeDeleted(String message) {
 			super(message);
 		}
 
@@ -55,7 +55,7 @@ public interface Collection {
 			return new CouldNotBeDeleted(MessageWithReason(collectionName, REASON_IT_DOES_NOT_EXIST), throwable);
 		}
 
-		public CouldNotBeDeleted(final Throwable cause) {
+		public CouldNotBeDeleted(Throwable cause) {
 			super(cause);
 		}
 

@@ -1,5 +1,7 @@
 package flashcard.app.collection.entity;
 
+import flashcard.app.Extensions;
+
 import java.nio.file.Path;
 import java.util.Comparator;
 
@@ -13,7 +15,7 @@ class UseNewerDatabaseVersion implements Comparator<Path> {
 	private static final String NEW_VERSION = ".anki21";
 
 	@Override
-	public int compare(final Path path1, final Path path2) {
+	public int compare(Path path1, Path path2) {
 		return Boolean.compare(hasExtension(path2, NEW_VERSION), hasExtension(path1, NEW_VERSION));
 	}
 }

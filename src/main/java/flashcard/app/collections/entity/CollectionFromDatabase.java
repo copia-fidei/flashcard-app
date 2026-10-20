@@ -13,12 +13,12 @@ public class CollectionFromDatabase extends CollectionInMemory {
 
 	private final Db database;
 
-	public CollectionFromDatabase(final Db database, final String name) {
+	public CollectionFromDatabase(Db database, String name) {
 		super(name);
 		this.database = database;
 	}
 
-	public CollectionFromDatabase(final Db database, final String name, List<Flashcard> flashcards) {
+	public CollectionFromDatabase(Db database, String name, List<Flashcard> flashcards) {
 		super(name, flashcards);
 		this.database = database;
 	}
@@ -56,8 +56,8 @@ public class CollectionFromDatabase extends CollectionInMemory {
 	}
 
 	@Override
-	public boolean equals(final Object o) {
-		if (!(o instanceof final CollectionFromDatabase that)) return false;
+	public boolean equals(Object o) {
+		if (!(o instanceof CollectionFromDatabase that)) return false;
 		return Objects.equals(Name(), that.Name());
 	}
 
