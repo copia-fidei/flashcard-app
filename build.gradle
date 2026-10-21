@@ -56,11 +56,9 @@ Web-ContextPath: /flashcards
 
 tasks.register('deploy_to_Karaf', Copy) {
     group = 'Deploy'
-    def bundleTask = tasks.named('bundle')
-    dependsOn(bundleTask)
-    from(bundleTask)
+    from(tasks.named('bundle'))
     // Change this to the /deploy folder of your Karaf.
-    into(file(System.env.HOME + '/.local/bin/apache-karaf-4.4.8/deploy'))
+    into("$System.env.HOME/.local/bin/apache-karaf-4.4.8/deploy")
 }
 
 test {

@@ -45,7 +45,7 @@ public class CollectionResource {
 	public Response deleteCollection(@PathParam("collection") String name) {
 		Optional<Collection> optCollection = collections.getCollection(name);
 		if (optCollection.isEmpty()) {
-			return redirectToErrorPage("Collection '" + name + " not found.");
+			return redirectToErrorPage("Collection '" + name + "' not found.");
 		}
 		try {
 			var collection = optCollection.get();
