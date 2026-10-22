@@ -2,13 +2,17 @@ package flashcard.app.collections.entity;
 
 import flashcard.app.Db;
 import flashcard.app.collection.entity.*;
+import flashcard.app.collection.entity.FlashcardRetriever.CouldNotRetrieve;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 
+import static flashcard.app.Extensions.getExtension;
+
 /**
- * Imports APKG files into the database.
+ * Imports APKG and CSV files into the database.
  */
 public class DatabaseImporter implements Importer {
 
@@ -27,12 +31,24 @@ public class DatabaseImporter implements Importer {
 
 	@Override
 	public Collection importCollection() throws CouldNotImport {
-		var flashcardsFromSqliteDatabase = new FlashcardsFromSqliteDatabase(new SqliteDbFromInputStream(inputStream));
+		String extension = getExtension(fileName);
+		var flashcardRetriever = switch (extension) {
+			case ".csv"  -> {
+				try {
+					yield new FlashcardRetrieverFromCsvFile(inputStream);
+				} catch (IOException e) {
+					throw CouldNotImport.Collection(fileName, e);
+				}
+			}
+			case ".apkg" -> new FlashcardRetrieverFromSqliteDatabase(new SqliteDbFromInputStream(inputStream));
+
+			default -> throw CouldNotImport.unsupportedFileFormat(fileName);
+		};
 
 		List<Flashcard> flashcards;
 		try {
-			flashcards = flashcardsFromSqliteDatabase.get();
-		} catch (RetrievedFlashcards.NotAvailable e) {
+			flashcards = flashcardRetriever.get();
+		} catch (CouldNotRetrieve e) {
 			throw CouldNotImport.Collection(fileName, e);
 		}
 		var collection = new CollectionFromDatabase(database, fileName, flashcards);

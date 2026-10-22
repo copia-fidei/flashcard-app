@@ -12,6 +12,10 @@ public interface Importer {
 			return new CouldNotImport("Could not import " + collectionName, t);
 		}
 
+		public static CouldNotImport unsupportedFileFormat(String collectionName) {
+			return new CouldNotImport("Could not import unsupported file format: " + collectionName);
+		}
+
 		public CouldNotImport(Throwable t) {
 			super(t);
 		}

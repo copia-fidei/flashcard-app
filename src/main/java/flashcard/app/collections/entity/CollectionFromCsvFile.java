@@ -1,11 +1,10 @@
 package flashcard.app.collections.entity;
 
-import flashcard.app.collection.entity.FlashcardsFromCsvFile;
+import flashcard.app.collection.entity.FlashcardRetrieverFromCsvFile;
 import flashcard.app.collection.entity.Collection;
 import flashcard.app.collection.entity.FileCollection;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
@@ -33,6 +32,6 @@ public class CollectionFromCsvFile implements CollectionsSource {
 
 			return List.of();
 		}
-		return List.of(new FileCollection(csvFile, new FlashcardsFromCsvFile(csvContent).get()));
+		return List.of(new FileCollection(csvFile, new FlashcardRetrieverFromCsvFile(csvContent).get()));
 	}
 }

@@ -33,15 +33,15 @@ public class FileImporter implements Importer {
 			Path fileOnServer = Files.write(directory, fileContent, CREATE);
 
 			String extension = getExtension(fileName);
-			var flashcards = switch (extension) {
-				case ".csv"  -> new FlashcardsFromCsvFile(new String(fileContent));
-				case ".apkg" -> new FlashcardsFromSqliteDatabase(new SqliteDbFromPath(fileOnServer));
+			var flashcardRetriever = switch (extension) {
+				case ".csv"  -> new FlashcardRetrieverFromCsvFile(fileContent);
+				case ".apkg" -> new FlashcardRetrieverFromSqliteDatabase(new SqliteDbFromPath(fileOnServer));
 
-				default -> throw new CouldNotImport("Unsupported file format: " + extension);
+				default -> throw CouldNotImport.unsupportedFileFormat(fileName);
 			};
 
-			return new FileCollection(fileOnServer, flashcards.get());
-		} catch (IOException | RetrievedFlashcards.NotAvailable e) {
+			return new FileCollection(fileOnServer, flashcardRetriever.get());
+		} catch (IOException | FlashcardRetriever.CouldNotRetrieve e) {
 			throw new CouldNotImport(e);
 		}
 	}

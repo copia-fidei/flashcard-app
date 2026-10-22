@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-class FlashcardsFromSqliteDatabaseTest {
+class FlashcardRetrieverFromSqliteDatabaseTest {
 
 	@Test
 	void flashcards_are_available() {
-		assertDoesNotThrow(() -> new FlashcardsFromSqliteDatabase(new SqliteDbFromPath(new ExampleApkgFile().getPath())).get());
+		assertDoesNotThrow(() -> new FlashcardRetrieverFromSqliteDatabase(new SqliteDbFromPath(new ExampleApkgFile().getPath())).get());
 	}
 }
