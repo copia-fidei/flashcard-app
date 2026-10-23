@@ -47,7 +47,6 @@ Navigate to ./bin and invoke ./karaf to open the Karaf console. Type:
    - bundle:install mvn:org.glassfish.jersey.ext/jersey-mvc-mustache/2.47
    - bundle:install wrap:mvn:com.github.spullara.mustache.java/compiler/0.9.14
    - bundle:install mvn:org.jvnet.mimepull/mimepull/1.9.15
-   - bundle:install mvn:de.siegmar/fastcsv/4.4.0
    - bundle:install mvn:com.univocity/univocity-parsers/2.9.1
    - feature:install war
    - feature:install http
@@ -197,5 +196,4 @@ If your bundles fail to resolve, compare your lists of bundles and features on y
 | MIME streaming extension                                   | 1.9.15             |
 | PostgreSQL JDBC Driver                                     | 42.7.3             |
 | flashcard-app                                              | 1.0.0              |
-| de.siegmar.fastcsv                                         | 4.4.0              |
 | univocity-parsers                                          | 2.9.1              |

@@ -19,7 +19,6 @@ dependencies {
     compileOnly 'javax.servlet:javax.servlet-api:3.0.1'
     compileOnly 'org.glassfish.jersey.media:jersey-media-multipart:2.47'
     compileOnly 'org.glassfish.jersey.ext:jersey-mvc-mustache:2.47'
-    compileOnly 'de.siegmar:fastcsv:4.4.0'
     compileOnly 'com.univocity:univocity-parsers:2.8.4'
 
     //compileOnly 'org.osgi:org.osgi.service.component.annotations:1.4.0'
