@@ -35,12 +35,12 @@ public class DatabaseImporter implements Importer {
 		var flashcardRetriever = switch (extension) {
 			case ".csv"  -> {
 				try {
-					yield new FlashcardRetrieverFromCsvFile(inputStream);
+					yield new FlashcardRetrieverFromCsv(inputStream);
 				} catch (IOException e) {
 					throw CouldNotImport.Collection(fileName, e);
 				}
 			}
-			case ".apkg" -> new FlashcardRetrieverFromSqliteDatabase(new SqliteDbFromInputStream(inputStream));
+			case ".apkg" -> new FlashcardRetrieverFromSqliteDatabase(inputStream);
 
 			default -> throw CouldNotImport.unsupportedFileFormat(fileName);
 		};

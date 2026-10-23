@@ -43,14 +43,11 @@ public class CollectionResource {
 	@DELETE
 	@Produces(MediaType.TEXT_HTML)
 	public Response deleteCollection(@PathParam("collection") String name) {
-		Optional<Collection> optCollection = collections.getCollection(name);
-		if (optCollection.isEmpty()) {
+		if (!collections.contains(name)) {
 			return redirectToErrorPage("Collection '" + name + "' not found.");
 		}
 		try {
-			var collection = optCollection.get();
-			collection.delete();
-			collections.List().remove(collection);
+			collections.delete(name);
 			return redirectToSuccessPage(name);
 		} catch (Collection.CouldNotBeDeleted e) {
 			return redirectToErrorPage(e);

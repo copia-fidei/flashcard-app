@@ -54,7 +54,6 @@ public class CollectionsResource {
 
 		final Collection newCollection;
 		try {
-			// FIXME this fails with csv files
 			newCollection = new DatabaseImporter(DATABASE, fileName, uploadedFile).importCollection();
 			// If you want to use the file importer instead:
 			//newCollection = new FileImporter(COLLECTIONS_DIR, fileName, uploadedFile).importCollection();

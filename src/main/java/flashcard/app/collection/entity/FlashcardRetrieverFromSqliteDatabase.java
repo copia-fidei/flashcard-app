@@ -1,6 +1,9 @@
 package flashcard.app.collection.entity;
 
+import flashcard.app.collections.entity.SqliteDbFromInputStream;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
@@ -15,6 +18,14 @@ public class FlashcardRetrieverFromSqliteDatabase implements FlashcardRetriever 
 
 	public FlashcardRetrieverFromSqliteDatabase(ApkgFileSqliteDb database) {
 		this.database = database;
+	}
+
+	public FlashcardRetrieverFromSqliteDatabase(InputStream apkg) {
+		this.database = new SqliteDbFromInputStream(apkg);
+	}
+
+	public FlashcardRetrieverFromSqliteDatabase(Path apkgFile) {
+		this.database = new SqliteDbFromPath(apkgFile);
 	}
 
 	@Override
@@ -38,7 +49,7 @@ public class FlashcardRetrieverFromSqliteDatabase implements FlashcardRetriever 
 			while (result.next()) {
 				String[] fields = result.getString("flds").split("\u001F");
 				if (fields.length >= 2) {
-					flashcards.add(new Flashcard(fields[0], fields[1]));
+					flashcards.add(new Flashcard(fields));
 				}
 			}
 		} catch (SQLException e) {

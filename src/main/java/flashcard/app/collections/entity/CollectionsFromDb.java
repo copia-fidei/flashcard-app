@@ -12,26 +12,26 @@ import static java.util.logging.Logger.getLogger;
 
 public class CollectionsFromDb implements CollectionsSource {
 
-    private static final Logger LOG = getLogger(CollectionsFromDb.class.getName());
+	private static final Logger LOG = getLogger(CollectionsFromDb.class.getName());
 
 	private final Db database;
 
 	public CollectionsFromDb(Db database) { this.database = database; }
 
+	private static final String QUERY = """
+			SELECT collections.name, flashcards.front, flashcards.back
+			FROM collections
+			LEFT JOIN flashcards ON collections.name = flashcards.collection
+			ORDER BY collections.name
+			""";
+
 	@Override
     public List<Collection> get() {
 		var collected = new HashMap<String, Collection>();
 
-        String sql = """
-                SELECT collections.name, flashcards.front, flashcards.back
-                FROM collections
-                LEFT JOIN flashcards ON collections.name = flashcards.collection
-                ORDER BY collections.name
-                """;
-
-        try (var connection = database.open();
+		try (var connection = database.open();
              var statement = connection.createStatement();
-			 var result = statement.executeQuery(sql))
+			 var result = statement.executeQuery(QUERY))
 		{
 			while (result.next()) {
 				String collection = result.getString("name");

@@ -1,18 +1,18 @@
 package flashcard.app.collections.entity;
 
+import flashcard.app.collection.entity.FlashcardRetriever.CouldNotRetrieve;
 import flashcard.app.collection.entity.FlashcardRetrieverFromCsvFile;
 import flashcard.app.collection.entity.Collection;
 import flashcard.app.collection.entity.FileCollection;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
-import static java.nio.file.Files.readString;
 import static java.util.logging.Logger.getLogger;
 
-public class CollectionFromCsvFile implements CollectionsSource {
+public class CollectionFromCsvFile implements Supplier<List<Collection>> {
 
 	private static final Logger LOG = getLogger(CollectionFromCsvFile.class.getName());
 
@@ -24,14 +24,13 @@ public class CollectionFromCsvFile implements CollectionsSource {
 
 	@Override
 	public List<Collection> get() {
-		final String csvContent;
 		try {
-			csvContent = readString(csvFile);
-		} catch (IOException e) {
-			LOG.warning("CSV file " + csvFile + " could not be read: " + e.getMessage());
+			var flashcards = new FlashcardRetrieverFromCsvFile(csvFile).get();
+			return List.of(new FileCollection(csvFile, flashcards));
+		} catch (CouldNotRetrieve e) {
+			LOG.warning("Flashcards could not be retrieved from file " + csvFile + ": " + e.getMessage());
 
 			return List.of();
 		}
-		return List.of(new FileCollection(csvFile, new FlashcardRetrieverFromCsvFile(csvContent).get()));
 	}
 }

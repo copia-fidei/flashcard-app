@@ -28,14 +28,12 @@ public class FileImporter implements Importer {
 	@Override
 	public Collection importCollection() throws CouldNotImport {
 		try (inputStream) {
-			byte[] fileContent = inputStream.readAllBytes();
-
-			Path fileOnServer = Files.write(directory, fileContent, CREATE);
+			Path fileOnServer = Files.write(directory, inputStream.readAllBytes(), CREATE);
 
 			String extension = getExtension(fileName);
 			var flashcardRetriever = switch (extension) {
-				case ".csv"  -> new FlashcardRetrieverFromCsvFile(fileContent);
-				case ".apkg" -> new FlashcardRetrieverFromSqliteDatabase(new SqliteDbFromPath(fileOnServer));
+				case ".csv"  -> new FlashcardRetrieverFromCsvFile(fileOnServer);
+				case ".apkg" -> new FlashcardRetrieverFromSqliteDatabase(fileOnServer);
 
 				default -> throw CouldNotImport.unsupportedFileFormat(fileName);
 			};

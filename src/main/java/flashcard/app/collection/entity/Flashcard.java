@@ -15,6 +15,11 @@ public class Flashcard implements Comparable<Flashcard> {
 		this.back  = back;
 	}
 
+	public Flashcard(String[] row) {
+		this.front = row[0];
+		this.back  = row[1];
+	}
+
 	/**
 	 * @return the front of the card
 	 */
