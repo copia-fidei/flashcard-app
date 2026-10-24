@@ -65,6 +65,6 @@ public class CollectionResource {
 	}
 
 	private Response redirectToSuccessPage(String collectionName) {
-		return new RedirectToResultPage("Collection successfully deleted", "Collection " + collectionName + "has been successfully deleted.").direct();
+		return new RedirectToResultPage("Collection successfully deleted", "Collection " + collectionName + " has been successfully deleted.").direct();
 	}
 }
