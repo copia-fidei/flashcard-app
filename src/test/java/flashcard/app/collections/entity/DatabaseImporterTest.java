@@ -23,7 +23,7 @@ class DatabaseImporterTest {
 
 		var apkgFile = new ExampleApkgFile();
 
-		InputStream resource = apkgFile.getInputStream();
+		InputStream resource = apkgFile.InputStream();
 		assertNotNull(resource);
 
 		try {

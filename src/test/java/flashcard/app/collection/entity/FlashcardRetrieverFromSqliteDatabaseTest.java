@@ -9,6 +9,6 @@ class FlashcardRetrieverFromSqliteDatabaseTest {
 
 	@Test
 	void flashcards_are_available() {
-		assertDoesNotThrow(() -> new FlashcardRetrieverFromSqliteDatabase(new SqliteDbFromPath(new ExampleApkgFile().getPath())).get());
+		assertDoesNotThrow(() -> new FlashcardRetrieverFromSqliteDatabase(new ExampleApkgFile().Path()).get());
 	}
 }

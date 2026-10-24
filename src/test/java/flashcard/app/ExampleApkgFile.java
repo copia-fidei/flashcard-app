@@ -8,11 +8,11 @@ public class ExampleApkgFile {
 
 	private final static String NAME = "US_Presidents_w_pics.apkg";
 
-	public InputStream getInputStream() {
+	public InputStream InputStream() {
 		return getClass().getResourceAsStream("/" + NAME);
 	}
 
-	public Path getPath() throws URISyntaxException, NullPointerException {
+	public Path Path() throws URISyntaxException, NullPointerException {
 		//noinspection DataFlowIssue
 		return Path.of(getClass().getResource("/" + NAME).toURI());
 	}
