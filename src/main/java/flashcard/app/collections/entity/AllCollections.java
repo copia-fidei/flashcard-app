@@ -12,7 +12,7 @@ import javax.inject.Singleton;
  * The hk2 injection kernel would need additional setup for that.
  * A simpler way was chosen. The binding ist configured manually in the Binder class.
  */
-//@Singleton
+@Singleton
 public class AllCollections extends CollectionsImp {
 
 	public AllCollections() {
